@@ -1,7 +1,9 @@
 const ComunidadPage = () => {
     return (
         <div>
-            <h1>Comunidad</h1>
+            <section className="flex">
+                <div className=" w-[200px] h-[200px] bg-[#6DAD58]"></div>
+            </section>
         </div>
     )
 }
