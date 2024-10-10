@@ -3,7 +3,7 @@ import HomePage from './pages/HomePage'
 import NavBar from "./components/NavBar"
 import PlanesPage from "./pages/PlanesPage"
 import ContactoPage from "./pages/contactoPAge"
-import ComunidadPage from "./pages/comunidadPage"
+import ComunidadPage from "./pages/ComunidadPage"
 import AyudaPage from "./pages/AyudaPAge"
 
 
