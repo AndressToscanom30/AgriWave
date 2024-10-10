@@ -3,7 +3,7 @@ const Comp3 = () => {
     return (
         <div>
             <h1 className="mt-6 text-[#6DAD58] text-2xl">MEJORA LA GESTIÓN DE TU PRODUCCIÓN</h1>
-            <div className="flex space-x-3 mt-[40px]">
+            <div className="flex space-x-2 mt-[40px]">
                 <div className="w-[50%]">
                     <h1 className="font-yeseva text-[40px]">Gestiona tus cultivos y ganado</h1>
                     <p className="text-lg mt-4 w-[80%]">Monitorear y mejorar el rendimiento de tu finca con información clara.</p>
