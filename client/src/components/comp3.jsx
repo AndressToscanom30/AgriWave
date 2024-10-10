@@ -10,7 +10,9 @@ const Comp3 = () => {
                     <button  className=" mt-[70px] border border-solid bg-[#6DAD58] rounded-lg text-white p-3 text-xl">Lleva el control de tu finca a otro nivel</button>
                 </div>
                 <div>
-                    <div className="w-[500px] h-[300px] bg-black"></div>
+                    <div className="w-[500px] h-[300px]">
+                        
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,3 +1,5 @@
+import imagen1 from '../imgs/comp1.png'
+
 const Comp1 = () => {
     return (
         <div>
@@ -9,7 +11,7 @@ const Comp1 = () => {
                     <button className=" mt-[110px] border border-solid bg-[#6DAD58] rounded-lg text-white p-3 text-xl">Descubre los beneficios de AgriWave</button>
                 </div>
                 <div>
-                    <div className="w-[500px] h-[300px] bg-black"></div>
+                    <img src={imagen1} />
                 </div>
             </div>
         </div>
