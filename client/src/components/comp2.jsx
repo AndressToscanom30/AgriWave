@@ -1,3 +1,5 @@
+import imagen2 from '../imgs/comp2.png'
+
 const Comp2 = () => {
     return (
         <div>
@@ -9,7 +11,7 @@ const Comp2 = () => {
                     <button  className=" mt-[70px] border border-solid bg-[#6DAD58] rounded-lg text-white p-3 text-xl">Transforma tu operación agrícola</button>
                 </div>
                 <div>
-                    <div className="w-[500px] h-[300px] bg-black"></div>
+                    <img src={imagen2} />
                 </div>
             </div>
         </div>
