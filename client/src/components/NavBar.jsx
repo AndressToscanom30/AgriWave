@@ -16,9 +16,6 @@ function NavBar() {
           <div className="flex space-x-4 ">
             <li><a href="/">Inicio</a></li>
             <li><a href="/planes">Planes</a></li>
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/comunidad">Comunidad</a></li>
-            <li><a href="/ayuda">Ayuda</a></li>
             <button onClick={openLoginModal} className="border border-solid border-[#6dad58] rounded-lg p-[2px]">Iniciar sesión</button>
             <button className="border rounded-lg p-[3px] bg-[#6DAD58] text-white">Registrarme</button>
           </div>
