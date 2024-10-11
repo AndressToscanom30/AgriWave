@@ -1,31 +1,45 @@
+import imagen from "../imgs/comp1.png"
+
 const AyudaPage = () => {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F5F8EE]">
-        <div className="bg-[#F5F8EE] p-5 rounded-lg shadow-md">
-          <h2 className="text-2xl mb-5">Preguntas frecuentes?</h2>
-          <ul className="list-none p-0">
-            <li className="text-lg mb-2">¿Qué es la ganadería bovina?</li>
-            <li className="text-lg mb-2">¿Qué es Agriwave?</li>
-            <li className="text-lg mb-2">¿Qué hace Agriwave?</li>
-            <li className="text-lg mb-2">¿Cómo funciona Agriwave?</li>
-          </ul>
-          <p className="text-base text-black">
-            ¿Tienes dudas? ¡Contáctanos en{' '}
-            <a href="https://twitter.com/AgriWaveSoporte" className="text-blue-500">
-              @AgriWaveSoporte
-            </a>{' '}
-            y con gusto te ayudamos!
-          </p>
-        </div>
-        <div className="ml-12">
-          <img
-            src="https://path_to_image.png" // Replace with the actual image path
-            alt="Agriculture Illustration"
-            className="w-[400px] h-auto"
-          />
-        </div>
+  return (
+    <div className="flex flex-col lg:flex-row items-center justify-between min-h-screen bg-gray-100 p-8 lg:p-16 space-y-8 lg:space-y-0 lg:space-x-8">
+      <div className="p-8 rounded-lg shadow-lg bg-[#F1F7E7] flex-1 space-y-6">
+        <h2 className="text-center text-3xl font-bold text-green-700">Preguntas frecuentes</h2>
+        <ul className="list-disc pl-5 space-y-4">
+          <li className="text-lg text-gray-800">
+            <strong>¿Qué es la ganadería bovina?</strong><br/>
+            Es la cría y manejo de ganado vacuno, especialmente para la producción de carne y leche. 
+          </li>
+          <li className="text-lg text-gray-800">
+            <strong>¿Qué es Agriwave?</strong><br/>
+            Es una plataforma innovadora que combina tecnología y agricultura para optimizar la gestión de recursos agrícolas.
+          </li>
+          <li className="text-lg text-gray-800">
+            <strong>¿Qué hace Agriwave?</strong><br/>
+            Agriwave ofrece soluciones tecnológicas para monitorear cultivos y ganado, mejorar la productividad y reducir el impacto ambiental.
+          </li>
+          <li className="text-lg text-gray-800">
+            <strong>¿Cómo funciona Agriwave?</strong><br/>
+            Funciona mediante sensores y algoritmos avanzados que analizan datos en tiempo real para tomar decisiones eficientes en la producción agrícola.
+          </li>
+        </ul>
+        <p className="text-base text-center text-gray-600">
+          ¿Tienes dudas? ¡Contáctanos en{' '}
+          <a href="https://twitter.com/AgriWaveSoporte" className="text-blue-500 underline">
+            @AgriWaveSoporte
+          </a>{' '}
+          y con gusto te ayudamos! 😈😏
+        </p>
       </div>
-    )
-  }
-  
-  export default AyudaPage
+      <div className="flex-1 flex justify-center">
+        <img
+          src={imagen}
+          alt="Agriculture Illustration"
+          className="w-[450px] h-auto rounded-lg shadow-lg"
+        />
+      </div>
+    </div>
+  )
+}
+
+export default AyudaPage
