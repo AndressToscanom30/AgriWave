@@ -14,25 +14,16 @@ const Footer = () => {
           <p className="text-gray-500">Software para gestión ganadera</p>
         </div>
 
-        <div className="flex space-x-4 mb-4 md:mb-0 mr-40">
-          <a
-            href="/comunidad"
-            className="text-gray-400 hover:text-gray-500 transition"
-          >
-            Comunidad
-          </a>
+        <div className="flex space-x-4 mb-4 md:mb-0">
+          <a href="/comunidad" className="text-gray-400 hover:text-gray-500 transition">Comunidad</a>
+          {/* Aquí, al hacer clic en "Contáctanos", se abre el modal */}
           <button
             onClick={toggleModal}
             className="text-gray-400 hover:text-gray-500 transition"
           >
             Contáctanos
           </button>
-          <a
-            href="/ayuda"
-            className="text-gray-400 hover:text-gray-500 transition"
-          >
-            Ayuda
-          </a>
+          <a href="/ayuda" className="text-gray-400 hover:text-gray-500 transition">Ayuda</a>
         </div>
 
         <div className="flex space-x-4">
@@ -66,11 +57,9 @@ const Footer = () => {
           <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
             <button
               onClick={toggleModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-            >
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
               <i className="fas fa-times"></i>
             </button>
-
             <div className="flex items-center mb-4">
               <div className="flex-1">
                 <h2 className="text-2xl font-bold">
