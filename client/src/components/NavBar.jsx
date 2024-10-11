@@ -1,12 +1,17 @@
 import { useState } from 'react';
-import pse from '../imgs/PSE.png'
+import pse from '../imgs/PSE.png';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 function NavBar() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginOpen(true);
   const closeLoginModal = () => setIsLoginOpen(false);
+
+  const openRegisterModal = () => setIsRegisterOpen(true);
+  const closeRegisterModal = () => setIsRegisterOpen(false);
 
   const openPlanModal = () => setIsPlanModalOpen(true);
   const closePlanModal = () => setIsPlanModalOpen(false);
@@ -21,8 +26,8 @@ function NavBar() {
           <div className="flex space-x-4 ">
             <li><a href="/">Inicio</a></li>
             <li><button onClick={openPlanModal} className="hover:underline">Planes</button></li>
-            <button onClick={openLoginModal} className="border border-solid border-[#6dad58] rounded-lg p-[2px]">Iniciar sesión</button>
-            <button className="border rounded-lg p-[3px] bg-[#6DAD58] text-white">Registrarme</button>
+            <button onClick={openLoginModal} className="border border-solid border-[#6DAD58] rounded-lg px-4 py-1 text-[#6DAD58]">Iniciar sesión</button>
+            <button onClick={openRegisterModal} className="border rounded-lg px-4 py-1 bg-[#6DAD58] text-white">Registrarme</button>
           </div>
         </ul>
       </nav>
@@ -31,20 +36,49 @@ function NavBar() {
       {/* Modal para Iniciar Sesión */}
       {isLoginOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-md w-96 relative z-50">
-            <h2 className="text-xl mb-4">Iniciar Sesión</h2>
-            <form>
-              <div className="mb-4">
-                <label className="block text-sm mb-2">Correo:</label>
-                <input type="email" className="w-full p-2 border border-gray-300 rounded" />
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button onClick={closeLoginModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+              <i className="fas fa-times"></i>
+            </button>
+            <h2 className="text-2xl font-bold text-center text-[#6DAD58] mb-4">Iniciar Sesión</h2>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-700">Correo:</label>
+                <input type="email" className="w-full p-2 border border-gray-300 rounded" placeholder="correo@example.com" />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm mb-2">Contraseña:</label>
-                <input type="password" className="w-full p-2 border border-gray-300 rounded" />
+              <div>
+                <label className="block text-sm text-gray-700">Contraseña:</label>
+                <input type="password" className="w-full p-2 border border-gray-300 rounded" placeholder="********" />
               </div>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Entrar</button>
+              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition">Entrar</button>
             </form>
-            <button onClick={closeLoginModal} className="mt-4 text-blue-500">Cerrar</button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para Registro */}
+      {isRegisterOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button onClick={closeRegisterModal} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+              <i className="fas fa-times"></i>
+            </button>
+            <h2 className="text-2xl font-bold text-center text-[#6DAD58] mb-4">Registrarme</h2>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-700">Nombre:</label>
+                <input type="text" className="w-full p-2 border border-gray-300 rounded" placeholder="Tu nombre" />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-700">Correo:</label>
+                <input type="email" className="w-full p-2 border border-gray-300 rounded" placeholder="correo@example.com" />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-700">Contraseña:</label>
+                <input type="password" className="w-full p-2 border border-gray-300 rounded" placeholder="********" />
+              </div>
+              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition">Registrarme</button>
+            </form>
           </div>
         </div>
       )}
