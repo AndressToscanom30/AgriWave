@@ -1,41 +1,57 @@
-import React, { useState } from 'react';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState } from "react";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Función para abrir/cerrar el modal
   const toggleModal = () => setIsOpen(!isOpen);
 
   return (
     <footer className="relative bg-[#F1F7E7] text-gray-500 py-8">
-      {/* Contenido del Footer */}
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         <div className="mb-4 md:mb-0">
           <h2 className="text-gray-500 font-semibold">AgriWave</h2>
           <p className="text-gray-500">Software para gestión ganadera</p>
         </div>
 
-        <div className="flex space-x-4 mb-4 md:mb-0">
-          <a href="/comunidad" className="text-gray-400 hover:text-gray-500 transition">Comunidad</a>
-          {/* Aquí, al hacer clic en "Contáctanos", se abre el modal */}
+        <div className="flex space-x-4 mb-4 md:mb-0 mr-40">
+          <a
+            href="/comunidad"
+            className="text-gray-400 hover:text-gray-500 transition"
+          >
+            Comunidad
+          </a>
           <button
             onClick={toggleModal}
             className="text-gray-400 hover:text-gray-500 transition"
           >
             Contáctanos
           </button>
-          <a href="/ayuda" className="text-gray-400 hover:text-gray-500 transition">Ayuda</a>
+          <a
+            href="/ayuda"
+            className="text-gray-400 hover:text-gray-500 transition"
+          >
+            Ayuda
+          </a>
         </div>
 
         <div className="flex space-x-4">
-          <a href="https://facebook.com" className="text-gray-400 hover:text-gray-500 transition">
+          <a
+            href="https://facebook.com"
+            className="text-gray-400 hover:text-gray-500 transition"
+          >
             <i className="fab fa-facebook-f"></i>
           </a>
-          <a href="https://twitter.com" className="text-gray-400 hover:text-gray-500 transition">
+          <a
+            href="https://twitter.com"
+            className="text-gray-400 hover:text-gray-500 transition"
+          >
             <i className="fab fa-twitter"></i>
           </a>
-          <a href="https://instagram.com" className="text-gray-400 hover:text-gray-500 transition">
+          <a
+            href="https://instagram.com"
+            className="text-gray-400 hover:text-gray-500 transition"
+          >
             <i className="fab fa-instagram"></i>
           </a>
         </div>
@@ -45,7 +61,6 @@ const Footer = () => {
         &copy; 2024. Todos los derechos reservados.
       </div>
 
-      {/* Modal superpuesto sobre el footer */}
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -58,9 +73,10 @@ const Footer = () => {
 
             <div className="flex items-center mb-4">
               <div className="flex-1">
-                <h2 className="text-2xl font-bold">Completa los datos para contactarte</h2>
+                <h2 className="text-2xl font-bold">
+                  Completa los datos para contactarte
+                </h2>
               </div>
-              {/* Icono decorativo */}
               <div className="ml-4">
                 <i className="fas fa-chart-line fa-2x text-green-500"></i>
               </div>
@@ -93,7 +109,9 @@ const Footer = () => {
 
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-4 py-2 bg-gray-100 border rounded">+57</span>
+                  <span className="px-4 py-2 bg-gray-100 border rounded">
+                    +57
+                  </span>
                   <input
                     type="tel"
                     className="w-full px-4 py-2 border rounded"
@@ -111,12 +129,22 @@ const Footer = () => {
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-2">Tipo de ganado:</label>
+                <label className="block text-gray-700 mb-2">
+                  Tipo de ganado:
+                </label>
                 <div className="space-x-4">
-                  <label><input type="checkbox" /> Vacuno</label>
-                  <label><input type="checkbox" /> Porcino</label>
-                  <label><input type="checkbox" /> Equino</label>
-                  <label><input type="checkbox" /> Avicultor</label>
+                  <label>
+                    <input type="checkbox" /> Vacuno
+                  </label>
+                  <label>
+                    <input type="checkbox" /> Porcino
+                  </label>
+                  <label>
+                    <input type="checkbox" /> Equino
+                  </label>
+                  <label>
+                    <input type="checkbox" /> Avicultor
+                  </label>
                 </div>
               </div>
 
