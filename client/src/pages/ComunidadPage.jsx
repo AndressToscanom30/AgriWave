@@ -26,7 +26,6 @@ const ComunidadPage = () => {
           </p>
         </div>
 
-        {/* Sección de Nuestro equipo en un div separado */}
         <div className="flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-[35px] text-[#6DAD58] font-bold">Nuestro equipo</h2>
           <div className="flex justify-center space-x-8 mt-4">
