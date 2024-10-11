@@ -24,8 +24,15 @@ function NavBar() {
             <a href="/" className="hover:text-green-600 transition duration-300">Agriwave</a>
           </div>
           <div className="flex space-x-6 items-center">
-            <li><a href="/" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inicio</a></li>
-            <li><a href="/inventarioterreno" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inventario Terreno</a></li>
+            <li>
+              <a href="/" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inicio</a>
+            </li>
+            <li>
+            <a href="/financiera" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Otra página</a>
+            </li>
+            <li>
+              <a href="/inventarioterreno" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inventario Terreno</a>
+            </li>
             <li>
               <button onClick={openPlanModal} className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Planes</button>
             </li>
@@ -37,8 +44,7 @@ function NavBar() {
             </button>
             <button
               onClick={openRegisterModal}
-              className="bg-[#6DAD58] rounded-lg px-5 py-2 text-white hover:bg-green-600 transition duration-300"
-            >
+              className="bg-[#6DAD58] rounded-lg px-5 py-2 text-white hover:bg-green-600 transition duration-300">
               Registrarme
             </button>
           </div>

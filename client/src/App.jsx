@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes} from "react-router-dom"
 import HomePage from './pages/HomePage'
 import NavBar from "./components/NavBar"
-import PlanesPage from "./pages/PlanesPage"
 import ContactoPage from "./pages/contactoPAge"
 import ComunidadPage from "./pages/ComunidadPage"
 import AyudaPage from "./pages/AyudaPAge"
 import Footer from "./components/footer"
 import Terreno from "./pages/inventarioterreno"
+import Financiera from "./pages/FinancieraPage"
 
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
           <Route path="/comunidad" element={<ComunidadPage />} />
           <Route path="/ayuda" element={<AyudaPage />} />
           <Route path="/inventarioTerreno" element={<Terreno />} />
+          <Route path="/financiera" element={<Financiera />} />
       </Routes>
       <Footer />
     </BrowserRouter>
