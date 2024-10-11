@@ -14,9 +14,8 @@ const Footer = () => {
           <p className="text-gray-500">Software para gestión ganadera</p>
         </div>
 
-        <div className="flex space-x-4 mb-4 md:mb-0">
+        <div className="flex space-x-4 mb-4 md:mb-0 mr-40">
           <a href="/comunidad" className="text-gray-400 hover:text-gray-500 transition">Comunidad</a>
-          {/* Aquí, al hacer clic en "Contáctanos", se abre el modal */}
           <button
             onClick={toggleModal}
             className="text-gray-400 hover:text-gray-500 transition"
