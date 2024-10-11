@@ -16,7 +16,6 @@ const PlanesPage = () => {
         Comprar Plan
       </button>
       
-      {/* Modal Pago */}
       <ModalPago isOpen={isModalOpen} closeModal={closeModal} />
     </div>
   );
