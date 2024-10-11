@@ -3,7 +3,7 @@ import HomePage from './pages/HomePage'
 import NavBar from "./components/NavBar"
 import ContactoPage from "./pages/contactoPAge"
 import ComunidadPage from "./pages/ComunidadPage"
-import AyudaPage from "./pages/AyudaPAge"
+import AyudaPage from "./pages/AyudaPage"
 import Footer from "./components/footer"
 import Terreno from "./pages/inventarioterreno"
 import Financiera from "./pages/FinancieraPage"
