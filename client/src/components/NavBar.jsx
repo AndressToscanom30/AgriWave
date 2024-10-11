@@ -18,22 +18,34 @@ function NavBar() {
 
   return (
     <div className="relative z-20">
-      <nav className="fixed w-screen h-16 bg-[#F1F7E7] z-30">
-        <ul className="flex justify-between items-center h-full px-6">
-          <div className="text-[#6DAD58] font-yeseva text-3xl">
-            <a href="/">Agriwave</a>
+      <nav className="fixed w-full h-16 bg-[#F1F7E7] shadow-lg z-30">
+        <ul className="flex justify-between items-center h-full px-8">
+          <div className="text-[#6DAD58] font-yeseva text-3xl tracking-wide">
+            <a href="/" className="hover:text-green-600 transition duration-300">Agriwave</a>
           </div>
-          <div className="flex space-x-4 ">
-            <li><a href="/">Inicio</a></li>
-            <li><button onClick={openPlanModal} className="hover:underline">Planes</button></li>
-            <button onClick={openLoginModal} className="border border-solid border-[#6DAD58] rounded-lg px-4 py-1 text-[#6DAD58]">Iniciar sesión</button>
-            <button onClick={openRegisterModal} className="border rounded-lg px-4 py-1 bg-[#6DAD58] text-white">Registrarme</button>
+          <div className="flex space-x-6 items-center">
+            <li><a href="/" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inicio</a></li>
+            <li><a href="/inventarioterreno" className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Inventario Terreno</a></li>
+            <li>
+              <button onClick={openPlanModal} className="text-gray-700 hover:text-[#6DAD58] transition duration-300">Planes</button>
+            </li>
+            <button
+              onClick={openLoginModal}
+              className="border border-[#6DAD58] rounded-lg px-5 py-2 text-[#6DAD58] hover:bg-[#6DAD58] hover:text-white transition duration-300"
+            >
+              Iniciar sesión
+            </button>
+            <button
+              onClick={openRegisterModal}
+              className="bg-[#6DAD58] rounded-lg px-5 py-2 text-white hover:bg-green-600 transition duration-300"
+            >
+              Registrarme
+            </button>
           </div>
         </ul>
       </nav>
       <div className="h-16"></div>
 
-      {/* Modal para Iniciar Sesión */}
       {isLoginOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
@@ -50,13 +62,12 @@ function NavBar() {
                 <label className="block text-sm text-gray-700">Contraseña:</label>
                 <input type="password" className="w-full p-2 border border-gray-300 rounded" placeholder="********" />
               </div>
-              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition">Entrar</button>
+              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition duration-300">Entrar</button>
             </form>
           </div>
         </div>
       )}
 
-      {/* Modal para Registro */}
       {isRegisterOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
@@ -77,17 +88,16 @@ function NavBar() {
                 <label className="block text-sm text-gray-700">Contraseña:</label>
                 <input type="password" className="w-full p-2 border border-gray-300 rounded" placeholder="********" />
               </div>
-              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition">Registrarme</button>
+              <button type="submit" className="w-full bg-[#6DAD58] text-white py-2 rounded hover:bg-green-600 transition duration-300">Registrarme</button>
             </form>
           </div>
         </div>
       )}
 
-      {/* Modal para Planes */}
       {isPlanModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-[#F1F7E7] p-6 rounded-lg shadow-md w-[90%] max-w-lg relative z-50">
-            <button onClick={closePlanModal} className="absolute top-3 right-4 text-gray-500 text-2xl">
+            <button onClick={closePlanModal} className="absolute top-3 right-4 text-gray-500 text-2xl hover:text-gray-700 transition">
               ✕
             </button>
             <h2 className="text-2xl font-semibold text-center text-[#6DAD58] mb-4">¡Obtén Agriwave Ahora mismo!</h2>
@@ -104,7 +114,7 @@ function NavBar() {
             </div>
             <button 
               onClick={() => window.location.href = 'https://www.pse.com.co/iniciar-pago'} 
-              className="bg-[#6DAD58] hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full w-full text-center"
+              className="bg-[#6DAD58] hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full w-full text-center transition duration-300"
             >
               Comprar Aquí
             </button>
