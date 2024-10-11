@@ -50,7 +50,7 @@ function NavBar() {
                 href="/inventarioterreno"
                 className="text-gray-700 hover:text-[#6DAD58] transition duration-300"
               >
-                Inventario Terreno
+                Gestión inventario
               </a>
             </li>
             <li>
