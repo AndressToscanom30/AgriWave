@@ -6,6 +6,7 @@ import ContactoPage from "./pages/contactoPAge"
 import ComunidadPage from "./pages/ComunidadPage"
 import AyudaPage from "./pages/AyudaPAge"
 import Footer from "./components/footer"
+import Terreno from "./pages/inventarioterreno"
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/contacto" element={<ContactoPage />} />
           <Route path="/comunidad" element={<ComunidadPage />} />
           <Route path="/ayuda" element={<AyudaPage />} />
+          <Route path="/inventarioTerreno" element={<Terreno />} />
       </Routes>
       <Footer />
     </BrowserRouter>
