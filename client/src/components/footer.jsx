@@ -4,27 +4,19 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Función para abrir/cerrar el modal
   const toggleModal = () => setIsOpen(!isOpen);
 
   return (
     <footer className="relative bg-[#F1F7E7] text-gray-500 py-8">
-      {/* Contenido del Footer */}
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         <div className="mb-4 md:mb-0">
           <h2 className="text-gray-500 font-semibold">AgriWave</h2>
           <p className="text-gray-500">Software para gestión ganadera</p>
         </div>
 
-        <div className="flex space-x-4 mb-4 md:mb-0">
+        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 justify-center text-center">
           <a href="/comunidad" className="text-gray-400 hover:text-gray-500 transition">Comunidad</a>
-          {/* Aquí, al hacer clic en "Contáctanos", se abre el modal */}
-          <button
-            onClick={toggleModal}
-            className="text-gray-400 hover:text-gray-500 transition"
-          >
-            Contáctanos
-          </button>
+          <button onClick={toggleModal} className="text-gray-400 hover:text-gray-500 transition">Contáctanos</button>
           <a href="/ayuda" className="text-gray-400 hover:text-gray-500 transition">Ayuda</a>
         </div>
 
@@ -45,22 +37,18 @@ const Footer = () => {
         &copy; 2024. Todos los derechos reservados.
       </div>
 
-      {/* Modal superpuesto sobre el footer */}
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="relative bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
             <button
               onClick={toggleModal}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-            >
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
               <i className="fas fa-times"></i>
             </button>
-
             <div className="flex items-center mb-4">
               <div className="flex-1">
                 <h2 className="text-2xl font-bold">Completa los datos para contactarte</h2>
               </div>
-              {/* Icono decorativo */}
               <div className="ml-4">
                 <i className="fas fa-chart-line fa-2x text-green-500"></i>
               </div>
