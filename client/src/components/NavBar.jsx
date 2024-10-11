@@ -54,10 +54,8 @@ function NavBar() {
               </a>
             </li>
             <li>
-              <button
-                onClick={openPlanModal}
-                className="text-gray-700 hover:text-[#6DAD58] transition duration-300"
-              >
+              <button onClick={openPlanModal}
+                className="text-gray-700 hover:text-[#6DAD58] transition duration-300">
                 Planes
               </button>
             </li>
