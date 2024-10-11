@@ -5,6 +5,7 @@ import PlanesPage from "./pages/PlanesPage"
 import ContactoPage from "./pages/contactoPAge"
 import ComunidadPage from "./pages/ComunidadPage"
 import AyudaPage from "./pages/AyudaPAge"
+import Footer from "./components/footer"
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/comunidad" element={<ComunidadPage />} />
           <Route path="/ayuda" element={<AyudaPage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

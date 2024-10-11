@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import Comp1 from '../components/comp1'
 import Comp2 from '../components/comp2'
 import Comp3 from '../components/comp3'
-import Comp4 from '../components/footer'
 
 const Carousel = ({ items }) => {
     const [currentIndex, setCurrentIndex] = useState(0)
@@ -56,7 +55,6 @@ const HomePage = () => {
     return (
         <div>
             <Carousel items={components} />
-            <Comp4 />
         </div>
 
 

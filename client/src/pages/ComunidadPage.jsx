@@ -23,7 +23,7 @@ const ComunidadPage = () => {
 
                 <div className="flex justify-center space-x-8 mt-10">
                     <img src="/imgs/pieri.jpg" alt="Pieri" className="w-[50px] h-[50px] rounded-full object-cover" />
-                    <img src="/path/to/image2.jpg" alt="Stiven" className="w-[150px] h-[150px] rounded-full object-cover" />
+                    <img src="/imgs/stiven.jpeg" alt="Stiven" className="w-[150px] h-[150px] rounded-full object-cover" />
                     <img src="/path/to/image3.jpg" alt="Jorge" className="w-[150px] h-[150px] rounded-full object-cover" />
                     <img src="/path/to/image4.jpg" alt="Ashlee" className="w-[150px] h-[150px] rounded-full object-cover" />
                 </div>
