@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/tareas")
 public class TareaController {
@@ -37,7 +38,7 @@ public class TareaController {
                 .orElseThrow (RuntimeException::new);
         
         tareaFromDB.setNombre(tarea.getNombre());
-        tareaFromDB.setCompleatado(tarea.isCompleatado());
+        tareaFromDB.setCompletado(tarea.isCompletado());
         
         
         return tareaRepository.save(tareaFromDB);

@@ -1,13 +1,13 @@
 package com.example;
 
-import org.junit.jupiter.api.Test;
+import main.ApiRestApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 
-@SpringBootTest
-class ApiRestApplicationTests {
+@SpringBootTest(classes = ApiRestApplication.class)  // Reemplaza con tu clase principal
+public class ApiRestApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {
+    }
 }
