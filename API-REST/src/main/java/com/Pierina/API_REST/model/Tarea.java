@@ -1,4 +1,4 @@
-package model;
+package com.Pierina.API_REST.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

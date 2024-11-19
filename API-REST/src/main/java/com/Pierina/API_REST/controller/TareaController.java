@@ -1,8 +1,8 @@
-package controller;
+package com.Pierina.API_REST.controller;
 
-import Repo.TareaRepository;
+import com.Pierina.API_REST.repo.TareaRepository;
 import java.util.List;
-import model.Tarea;
+import com.Pierina.API_REST.model.Tarea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -58,3 +58,4 @@ public class TareaController {
     }
     
 }
+

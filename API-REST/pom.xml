@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>API_REST</artifactId>
+	<artifactId>API-REST</artifactId>
 	<version>1.0</version>
-	<name>API_REST</name>
+	<name>API-REST</name>
 	<description>API para hacer cositas</description>
 	<url/>
 	<licenses>

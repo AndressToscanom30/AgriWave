@@ -1,4 +1,4 @@
-package controller;
+package com.Pierina.API_REST.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +9,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(){
         
-        return "Bienvenido a la APierina";
+        return "Bienvenido a la APIerina";
         
     }
     
