@@ -6,6 +6,7 @@ import AyudaPage from "./pages/AyudaPage"
 import Footer from "./components/footer"
 import Terreno from "./pages/inventarioterreno"
 import Financiera from "./pages/FinancieraPage"
+import Prueba from './pages/prueba'
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <BrowserRouter>
     <NavBar />
       <Routes>
+        <Route path="/prueba" element={<Prueba />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/comunidad" element={<ComunidadPage />} />
           <Route path="/ayuda" element={<AyudaPage />} />
