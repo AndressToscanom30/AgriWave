@@ -16,5 +16,6 @@ public class Terreno {
     private String condicionesAmb;
     private String ubicacion;
     private String zonificacion;
+    
 
 }
