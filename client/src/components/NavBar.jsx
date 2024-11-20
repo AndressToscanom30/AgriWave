@@ -150,11 +150,8 @@ function NavBar() {
                   <a href="/" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                     Inicio
                   </a>
-                  <a href="/financiera" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
-                    Gestión financiera
-                  </a>
-                  <a href="/inventarioterreno" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
-                    Gestión inventario
+                  <a href="/panel/*" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
+                    Gestión total
                   </a>
                   <button
                     onClick={() => {
