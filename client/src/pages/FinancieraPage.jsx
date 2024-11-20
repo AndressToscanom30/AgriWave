@@ -1,86 +1,111 @@
-import imagenAgriwave from "../imgs/agriwave.jpeg";
+import { motion } from 'framer-motion';
+import { HiOutlineChartBar, HiOutlineCash, HiOutlineDocumentAdd } from 'react-icons/hi';
 
 const FinancieraPage = () => {
-  const menuItems = [
-    { title: "Registro Vacunas", items: ["Registro", "Eliminar registro"] },
-    "Registro Alimentación",
-    "Registro Costos Animal",
-    "Registro Producción Animal",
-    "Registro Costo Terreno",
-  ];
-
   const cards = [
-    { title: "VACUNAS ANIMALES" },
-    { title: "COSTO ALIMENTACION ANIMALES" },
-    { title: "COSTO ANIMAL" },
-    { title: "PRODUCCION ANIMAL" },
-    { title: "COSTO TERRENO" },
+    {
+      title: "VACUNAS ANIMALES",
+      icon: "💉",
+      description: "Gestiona los registros de vacunación",
+      stats: { total: "150", pending: "12" }
+    },
+    {
+      title: "COSTO ALIMENTACION",
+      icon: "🌾",
+      description: "Control de gastos en alimentación",
+      stats: { total: "$2,500", month: "+15%" }
+    },
+    {
+      title: "COSTO ANIMAL",
+      icon: "🐄",
+      description: "Seguimiento de costos por animal",
+      stats: { total: "$5,200", month: "-8%" }
+    },
+    {
+      title: "PRODUCCION ANIMAL",
+      icon: "📊",
+      description: "Métricas de producción",
+      stats: { total: "1,200L", month: "+22%" }
+    },
+    {
+      title: "COSTO TERRENO",
+      icon: "🌱",
+      description: "Gestión de costos de terreno",
+      stats: { total: "$12,000", year: "+5%" }
+    }
   ];
 
   return (
-    <div className="flex h-screen bg-[#F9FFEF]">
-      <div className="w-64 bg-[#CDE3A9] p-4">
-        <div className="flex items-center mb-6">
-          <img src={imagenAgriwave} alt="Agriwave logo" className="w-20 h-10 rounded-full" />
-          <h1 className="text-2xl font-bold ml-2 text-[#3F523B]">AGRIWAVE</h1>
-        </div>
-        <button className="w-full mb-4 bg-[#9AB48D] text-[#3F523B] hover:bg-[#769F4A] py-2 rounded-lg">
-          Nuevo registro... +
-        </button>
-        <nav>
-          {menuItems.map((item, index) => (
-            <div key={index} className="mb-2 ">
-              {typeof item === "string" ? (
-                <button className="w-full text-left bg-[#CDE3A9] text-[#3F523B] py-2 px-4 rounded-md hover:bg-[#9cae7e]">
-                  {item}
-                </button>
-              ) : (
-                <>
-                  <button className="w-full text-left bg-[#CDE3A9] text-[#3F523B] py-2 px-4 rounded-md hover:bg-[#9cae7e] mb-3">
-                    {item.title}
-                  </button>
-                  <div className="ml-4">
-                    {item.items.map((subItem, subIndex) => (
-                      <button
-                        key={subIndex}
-                        className="w-full text-left bg-[#E6E9D9] text-sm text-[#47624F] py-2 px-4 rounded-md hover:bg-[#d6d9c9] mb-3"
-                      >
-                        {subItem}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </nav>
-      </div>
-      <div className="flex-1 p-8 bg-[#F4F8F4]">
-        <h2 className="text-3xl font-bold mb-6 text-[#47624F]">Gestión Financiera</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cards.map((card, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="pb-4">
-                <img src={imagenAgriwave} alt="Agriwave logo" className="w-27 h-24 mx-auto rounded-lg" />
-              </div>
-              <h3 className="text-xl font-semibold text-center text-[#47624F] mb-4">{card.title}</h3>
-              <div className="flex justify-center space-x-2">
-                <button className="bg-[#E6E9D9] text-[#3F523B] hover:bg-[#d6d9c9] px-4 py-2 rounded-lg mb">
-                  VER REGISTRO
-                </button>
-                <button className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-4 py-2 rounded-lg">
-                  AGREGAR REGISTRO
-                </button>
-              </div>
-            </div>
-          ))}
+    <div className="pt-20 p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
+      {/* Header Section */}
+      <div className="mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center"
+        >
+          {/* Header content stays the same */}
+        </motion.div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-3 gap-6 mt-8">
+          <div className="bg-white p-6 rounded-xl shadow-md">
+            <HiOutlineCash className="text-3xl text-[#96BE54] mb-2" />
+            <h3 className="text-sm text-gray-500">Total Gastos</h3>
+            <p className="text-2xl font-bold text-[#47624F]">$24,500</p>
+            <span className="text-xs text-green-500">+12% vs mes anterior</span>
+          </div>
         </div>
       </div>
+
+      {/* Cards Grid */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        {cards.map((card, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 group"
+          >
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div className="text-4xl bg-[#F9FFEF] p-3 rounded-lg group-hover:scale-110 transition-transform">
+                  {card.icon}
+                </div>
+                <div className="text-right">
+                  <span className="text-sm text-gray-500">Total</span>
+                  <p className="text-lg font-bold text-[#47624F]">{card.stats.total}</p>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-semibold text-[#47624F] mb-2">
+                {card.title}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {card.description}
+              </p>
+
+              <div className="flex flex-col space-y-2">
+                <button className="bg-[#E6E9D9] text-[#3F523B] hover:bg-[#d6d9c9] px-6 py-2 rounded-lg transition-all hover:scale-105">
+                  Ver Registro
+                </button>
+                <button className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-6 py-2 rounded-lg transition-all hover:scale-105">
+                  Agregar Registro
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
+
 };
 
 export default FinancieraPage;
