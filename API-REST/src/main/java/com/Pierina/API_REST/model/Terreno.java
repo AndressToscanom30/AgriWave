@@ -16,6 +16,10 @@ public class Terreno {
     private String condicionesAmb;
     private String ubicacion;
     private String zonificacion;
-    
+    private float costoTerreno;
+    private float costoMantenimiento;
+    private float costoConstrucciones;
+    private float costoArriendo;
+    private float adicionales;    
 
 }

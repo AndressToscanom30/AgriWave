@@ -41,7 +41,12 @@ public class TerrenoController {
         terrenoFromDB.setCondicionesAmb(terreno.getCondicionesAmb());
         terrenoFromDB.setUbicacion(terreno.getUbicacion());
         terrenoFromDB.setZonificacion(terreno.getZonificacion());
-        
+        terrenoFromDB.setCostoTerreno(terreno.getCostoTerreno());
+        terrenoFromDB.setCostoMantenimiento(terreno.getCostoMantenimiento());
+        terrenoFromDB.setCostoConstrucciones(terreno.getCostoConstrucciones());
+        terrenoFromDB.setCostoArriendo(terreno.getCostoArriendo());
+        terrenoFromDB.setAdicionales(terreno.getAdicionales());
+
         return terrenoRepository.save(terrenoFromDB);
         
     }

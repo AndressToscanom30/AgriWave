@@ -13,5 +13,9 @@ public class Animal {
     private Date fechaNacimiento;
     private float peso;
     private String origen;
+    private float costoAnimal;
+    private Date fechaCompra;
+    private boolean documentado;
+    private float adicional;
 
 }
