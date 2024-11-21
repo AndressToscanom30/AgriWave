@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import imagenAgriwave from "../imgs/agriwave.jpeg";
 import FinancieraPage from './FinancieraPage';
 import InventarioTerreno from './inventarioterreno';
+import VacunasAnimalesPage from './VacunasAnimales';
+import ProduccionAnimalPage from './ProduccionAnimal';
+import GestionAlimentacionPage from './GestionAlimento';
 
 const MenuItem = ({ icon, title, isActive, onClick }) => (
     <motion.button
@@ -25,9 +28,31 @@ const MenuItem = ({ icon, title, isActive, onClick }) => (
     </motion.button>
 );
 
+const SubMenuItem = ({ icon, title, isActive, onClick }) => (
+    <motion.button
+        onClick={onClick}
+        className={`
+          w-full rounded-xl p-2 pl-12 transition-all duration-300 transform
+          ${isActive
+                ? 'bg-gradient-to-r from-[#96BE54]/70 to-[#7FAA3B]/70 text-white shadow-lg translate-x-2'
+                : 'hover:bg-[#E6E9D9] text-[#3F523B] hover:translate-x-2'
+            }
+          flex items-center gap-3 group text-sm
+        `}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+    >
+        <span className={`text-xl group-hover:scale-110 transition-transform duration-300 ${isActive ? 'animate-bounce' : ''}`}>
+            {icon}
+        </span>
+        <span className="font-medium tracking-wide">{title}</span>
+    </motion.button>
+);
+
 const PanelTotal = () => {
     const [currentView, setCurrentView] = useState('financiera');
     const [isHovered, setIsHovered] = useState(false);
+    const [isFinancieraExpanded, setIsFinancieraExpanded] = useState(false);
 
     const sidebarVariants = {
         closed: {
@@ -38,7 +63,7 @@ const PanelTotal = () => {
             }
         },
         open: {
-            width: "288px", // 72 * 4 = 288px
+            width: "320px",
             transition: {
                 duration: 0.4,
                 ease: "easeInOut"
@@ -88,7 +113,7 @@ const PanelTotal = () => {
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.3, delay: 0.1 }}
-                                className="w-72 h-full bg-white/95 backdrop-blur-sm p-8"
+                                className="w-80 h-full bg-white/95 backdrop-blur-sm p-8"
                             >
                                 <motion.div
                                     initial="hidden"
@@ -139,30 +164,54 @@ const PanelTotal = () => {
                                             >
                                                 Gestión Principal
                                             </motion.h2>
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.5 }}
-                                            >
+
+                                            <div className="space-y-1">
                                                 <MenuItem
                                                     icon="💰"
                                                     title="Gestión Financiera"
-                                                    isActive={currentView === 'financiera'}
-                                                    onClick={() => setCurrentView('financiera')}
+                                                    isActive={currentView === 'financiera' || isFinancieraExpanded}
+                                                    onClick={() => {
+                                                        setCurrentView('financiera');
+                                                        setIsFinancieraExpanded(!isFinancieraExpanded);
+                                                    }}
                                                 />
-                                            </motion.div>
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ delay: 0.6 }}
-                                            >
-                                                <MenuItem
-                                                    icon="📦"
-                                                    title="Inventario"
-                                                    isActive={currentView === 'inventario'}
-                                                    onClick={() => setCurrentView('inventario')}
-                                                />
-                                            </motion.div>
+                                                <AnimatePresence>
+                                                    {isFinancieraExpanded && (
+                                                        <motion.div
+                                                            initial={{ opacity: 0, height: 0 }}
+                                                            animate={{ opacity: 1, height: "auto" }}
+                                                            exit={{ opacity: 0, height: 0 }}
+                                                            className="space-y-1 overflow-hidden"
+                                                        >
+                                                            <SubMenuItem
+                                                                icon="💉"
+                                                                title="Vacunas Animales"
+                                                                isActive={currentView === 'vacunas'}
+                                                                onClick={() => setCurrentView('vacunas')}
+                                                            />
+                                                            <SubMenuItem
+                                                                icon="🥩"
+                                                                title="Producción Animal"
+                                                                isActive={currentView === 'produccion'}
+                                                                onClick={() => setCurrentView('produccion')}
+                                                            />
+                                                            <SubMenuItem
+                                                                icon="🌾"
+                                                                title="Gestión Alimentación"
+                                                                isActive={currentView === 'alimentacion'}
+                                                                onClick={() => setCurrentView('alimentacion')}
+                                                            />
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+
+                                            <MenuItem
+                                                icon="📦"
+                                                title="Inventario"
+                                                isActive={currentView === 'inventario'}
+                                                onClick={() => setCurrentView('inventario')}
+                                            />
                                         </div>
 
                                         <motion.div
@@ -210,7 +259,11 @@ const PanelTotal = () => {
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        {currentView === 'financiera' ? <FinancieraPage /> : <InventarioTerreno />}
+                        {currentView === 'financiera' && <FinancieraPage />}
+                        {currentView === 'vacunas' && <VacunasAnimalesPage />}
+                        {currentView === 'produccion' && <ProduccionAnimalPage />}
+                        {currentView === 'alimentacion' && <GestionAlimentacionPage />}
+                        {currentView === 'inventario' && <InventarioTerreno />}
                     </motion.div>
                 </AnimatePresence>
             </div>

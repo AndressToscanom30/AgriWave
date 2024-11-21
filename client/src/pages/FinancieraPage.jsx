@@ -83,7 +83,7 @@ const FinancieraPage = () => {
       icon: "📊",
       description: "Métricas de producción",
       stats: { total: "1,200L", month: "+22%" },
-      link: "/produccion-animal"
+      link: "/produccion"
     },
     {
       title: "GESTION DE TERRENO",

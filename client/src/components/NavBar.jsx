@@ -277,34 +277,6 @@ function NavBar() {
                   >
                     Iniciar sesión
                   </motion.button>
-
-                  <div className="relative my-8">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500">O continúa con</span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border-2 border-gray-200 hover:border-[#6DAD58] transition-colors"
-                    >
-                      <i className="fab fa-google text-red-500" />
-                      <span className="text-gray-700">Google</span>
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border-2 border-gray-200 hover:border-[#6DAD58] transition-colors"
-                    >
-                      <i className="fab fa-facebook text-blue-600" />
-                      <span className="text-gray-700">Facebook</span>
-                    </motion.button>
-                  </div>
                 </form>
               </div>
             </motion.div>
@@ -440,34 +412,6 @@ function NavBar() {
                   >
                     Crear cuenta
                   </motion.button>
-
-                  <div className="relative my-8">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200" />
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500">O regístrate con</span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border-2 border-gray-200 hover:border-[#6DAD58] transition-colors"
-                    >
-                      <i className="fab fa-google text-red-500" />
-                      <span className="text-gray-700">Google</span>
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 rounded-xl border-2 border-gray-200 hover:border-[#6DAD58] transition-colors"
-                    >
-                      <i className="fab fa-facebook text-blue-600" />
-                      <span className="text-gray-700">Facebook</span>
-                    </motion.button>
-                  </div>
 
                   <p className="text-center text-sm text-gray-600">
                     ¿Ya tienes una cuenta?{' '}
