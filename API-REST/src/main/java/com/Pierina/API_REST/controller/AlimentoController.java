@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 
 @CrossOrigin
 @RestController
-@RequestMapping("alimentos")
+@RequestMapping("/alimentos")
 public class AlimentoController {
 
     @Autowired

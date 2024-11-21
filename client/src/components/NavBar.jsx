@@ -82,7 +82,7 @@ function NavBar() {
 
   return (
     <div className="relative z-20">
-      <nav className="fixed w-full backdrop-blur-md bg-[#F1F7E7]/90 shadow-lg z-30">
+      <nav className="mt-[-80px] fixed w-full backdrop-blur-md bg-[#F1F7E7]/90 shadow-lg z-30">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center h-20 px-4 lg:px-8">
             <motion.div
@@ -98,7 +98,7 @@ function NavBar() {
               <a href="/" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                 Inicio
               </a>
-              <a href="/panel/*" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
+              <a href="/panel" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                 Gestión total final para todas
               </a>
               <button
@@ -150,7 +150,7 @@ function NavBar() {
                   <a href="/" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                     Inicio
                   </a>
-                  <a href="/panel/*" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
+                  <a href="/panel" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                     Gestión total
                   </a>
                   <button
@@ -552,6 +552,7 @@ function NavBar() {
           </motion.div>
         </motion.div>
       )}
+      <div className="mt-20"></div>
     </div >
   );
 }

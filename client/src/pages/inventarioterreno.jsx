@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from 'framer-motion';
 import { HiOutlinePlus, HiOutlineSearch, HiOutlineFilter, HiOutlineLocationMarker, HiOutlineCube } from 'react-icons/hi';
 
