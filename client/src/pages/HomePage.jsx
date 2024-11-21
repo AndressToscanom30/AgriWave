@@ -5,9 +5,9 @@ import Comp3 from '../components/comp3'
 
 const HomePage = () => {
   const components = [
-    <div key="1" className="px-8 md:px-16 lg:px-24"><Comp1 /></div>,
-    <div key="2" className="px-8 md:px-16 lg:px-24"><Comp2 /></div>,
-    <div key="3" className="px-8 md:px-16 lg:px-24"><Comp3 /></div>,
+    <div key="1" className="px-8 md:px-16 lg:px-24 mt-[-30px]"><Comp1 /></div>,
+    <div key="2" className="px-8 md:px-16 lg:px-24 mt-[-30px]"><Comp2 /></div>,
+    <div key="3" className="px-8 md:px-16 lg:px-24 mt-[-30px]"><Comp3 /></div>,
   ]
 
   return (

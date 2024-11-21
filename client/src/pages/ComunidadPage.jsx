@@ -118,7 +118,7 @@ const ComunidadPage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ComunidadPage;
+export default ComunidadPage
