@@ -6,6 +6,9 @@ import AyudaPage from "./pages/AyudaPage";
 import Footer from "./components/footer";
 import Prueba from './pages/prueba';
 import PanelTotal from './pages/panelTotal';
+import AlimentosPage from "./pages/AlimentosPage";
+import Vacunitas from "./pages/VacunasAnimales";
+import Produccion from "./pages/ProduccionAnimal";
 
 function App() {
   return (
