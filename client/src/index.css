@@ -10,6 +10,7 @@ body{
   scrollbar-width: thin;
 }
 
+
 @media (min-width: 700px) {
   .flex-col-on-small {
     flex-direction: row;
