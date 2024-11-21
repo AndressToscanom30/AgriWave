@@ -64,13 +64,12 @@ const InventarioTerreno = () => {
 
   return (
     <div className="pt-20 p-8 bg-gradient-to-br from-[#F9FFEF]/50 to-white/30 min-h-screen">
-      {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-12"
       >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div className="pt-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h2 className="text-4xl font-bold text-[#47624F]">
               Gestión de Terreno y Rebaño
@@ -95,7 +94,6 @@ const InventarioTerreno = () => {
           </div>
         </div>
 
-        {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -128,9 +126,7 @@ const InventarioTerreno = () => {
           </motion.div>
         </div>
 
-        {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Terrenos Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -156,7 +152,6 @@ const InventarioTerreno = () => {
             </div>
           </motion.div>
 
-          {/* Rebaños Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}

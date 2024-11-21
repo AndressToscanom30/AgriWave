@@ -1,41 +1,122 @@
+import { useEffect } from 'react';
 import pieri from "../imgs/pieri.jpg";
 import stiven from "../imgs/stiven.jpeg";
-import jorge from "../imgs/jorge.jpg"
-import ashlee from "../imgs/ash.jpeg"
+import jorge from "../imgs/jorge.jpg";
+import ashlee from "../imgs/ash.jpeg";
+import logo from "../imgs/AgriWave.jpeg"; // Ajusta la ruta según donde tengas el logo
+
+
+const TeamMember = ({ image, name, role }) => (
+  <div className="group relative">
+    <div className="relative overflow-hidden rounded-2xl">
+      <img
+        src={image}
+        alt={name}
+        className="w-64 h-64 object-cover transform transition-transform duration-500 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#6DAD58] via-transparent opacity-0 group-hover:opacity-70 transition-opacity duration-300" />
+      <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <h3 className="text-xl font-bold">{name}</h3>
+        <p className="text-sm">{role}</p>
+      </div>
+    </div>
+  </div>
+);
 
 const ComunidadPage = () => {
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+
+  const teamMembers = [
+    { image: pieri, name: "Pierina", role: "Desarrolladora Frontend" },
+    { image: stiven, name: "Stiven", role: "Desarrollador Backend" },
+    { image: jorge, name: "Jorge", role: "Diseñador UI/UX" },
+    { image: ashlee, name: "Ashlee", role: "Project Manager" }
+  ];
+
   return (
-    <div className="bg-gray-100 font-['Poppins', sans-serif] p-6">
-      <section className="space-y-12">
-        <div className="flex flex-row space-x-8 items-center bg-white p-6 rounded-lg shadow-md">
-          <div className="w-[200px] h-[220px] bg-[#6DAD58] rounded-br-full shadow-lg"></div>
-          <div className="flex flex-col">
-            <h2 className="text-[35px] text-[#6DAD58] font-bold mb-2">¿Quiénes somos en Agriwave?</h2>
-            <div className="w-[700px]">
-              <p className="text-gray-700 text-lg leading-relaxed">
-                Somos un equipo apasionado que busca innovar en el sector agrícola y ganadero. Nuestro objetivo es proporcionar herramientas accesibles y eficientes que permitan a los agricultores y ganaderos gestionar sus fincas de manera óptima y mejorar su productividad. Nos enfocamos en entender las necesidades del campo y desarrollar AgriWave como una solución integral que combine tecnología y conocimiento práctico.
+    <div className="pt-20 min-h-screen bg-gradient-to-b from-gray-50 to-gray-100" style={{ fontFamily: "'Poppins', sans-serif" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="relative overflow-hidden bg-white rounded-3xl shadow-xl mb-16">
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#6DAD58]/10" />
+          <div className="relative z-10 flex items-center p-12">
+            <div className="w-2/3 pr-12">
+              <h1 className="text-5xl font-bold text-gray-900 mb-6">
+                <span className="text-[#6DAD58]">Agriwave:</span> Innovación en el Campo
+              </h1>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                Transformamos la agricultura y ganadería con tecnología inteligente y soluciones innovadoras. Nuestra pasión es hacer el campo más eficiente y sostenible.
               </p>
+            </div>
+            <div className="w-1/3">
+              <div className="relative aspect-square rounded-full bg-white shadow-2xl p-6 overflow-hidden group hover:shadow-[#6DAD58]/30 transition-all duration-500">
+                <img
+                  src={logo}
+                  alt="AgriWave Logo"
+                  className="w-full h-full object-contain transform transition-all duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#6DAD58]/10 to-transparent rounded-full" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-xl p-12 mb-16">
+          <h2 className="text-4xl font-bold text-[#6DAD58] mb-8">Nuestra Misión</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-[#6DAD58]/10 rounded-full">
+                  <svg className="w-6 h-6 text-[#6DAD58]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="text-lg text-gray-700">Transformación digital del sector ganadero</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-[#6DAD58]/10 rounded-full">
+                  <svg className="w-6 h-6 text-[#6DAD58]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <p className="text-lg text-gray-700">Optimización de recursos y productividad</p>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-[#6DAD58]/10 rounded-full">
+                  <svg className="w-6 h-6 text-[#6DAD58]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-lg text-gray-700">Soluciones tecnológicas integrales</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-[#6DAD58]/10 rounded-full">
+                  <svg className="w-6 h-6 text-[#6DAD58]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-lg text-gray-700">Gestión eficiente y sostenible</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-[35px] text-[#6DAD58] font-bold">Nuestra misión</h2>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Facilitar la transformación digital en el sector ganadero proporcionando soluciones tecnológicas integrales que optimicen la gestión de animales, finanzas y terrenos. A través de herramientas intuitivas y avanzadas, ayudamos a los ganaderos a maximizar la productividad, mejorar la toma de decisiones y garantizar una gestión sostenible y eficiente de sus recursos.
-          </p>
-        </div>
-
-        <div className="flex flex-col space-y-4 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-[35px] text-[#6DAD58] font-bold">Nuestro equipo</h2>
-          <div className="flex justify-center space-x-8 mt-4">
-            <img src={pieri} alt="Pieri" className="w-[150px] h-[150px] rounded-full object-cover border-4 border-[#6DAD58] shadow-lg transition-transform transform hover:scale-105" />
-            <img src={stiven} alt="Stiven" className="w-[150px] h-[150px] rounded-full object-cover border-4 border-[#6DAD58] shadow-lg transition-transform transform hover:scale-105" />
-            <img src={jorge} alt="Jorge" className="w-[150px] h-[150px] rounded-full object-cover border-4 border-[#6DAD58] shadow-lg transition-transform transform hover:scale-105" />
-            <img src={ashlee} alt="Ashlee" className="w-[150px] h-[150px] rounded-full object-cover border-4 border-[#6DAD58] shadow-lg transition-transform transform hover:scale-105" />
+        <div className="bg-white rounded-3xl shadow-xl p-12">
+          <h2 className="text-4xl font-bold text-[#6DAD58] mb-12 text-center">Nuestro Equipo</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
+            {teamMembers.map((member, index) => (
+              <TeamMember key={index} {...member} />
+            ))}
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
