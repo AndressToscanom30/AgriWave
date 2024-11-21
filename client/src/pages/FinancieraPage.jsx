@@ -69,7 +69,7 @@ const FinancieraPage = () => {
       icon: "🌾",
       description: "Control de gastos en alimentación",
       stats: { total: "$2,500", month: "+15%" },
-      link: "/alimentos"
+      link: "/alimento"
     },
     {
       title: "GESTION ANIMAL",
