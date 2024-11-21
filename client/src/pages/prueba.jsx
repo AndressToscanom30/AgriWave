@@ -1,40 +1,39 @@
-import { useEffect, useRef, useState } from 'react';
-import ListaTareas from '../components/ListaTareas';
-import axios from 'axios';
+import { useEffect, useRef, useState } from 'react'
+import ListaTareas from '../components/ListaTareas'
+import axios from 'axios'
 
-const Prueba = ({ onSubmit: parentOnSubmit }) => { // Renombrado para evitar colisión con `onSubmit`
+const Prueba = ({ onSubmit: parentOnSubmit }) => {
 
-    const form = useRef();
+    const form = useRef()
 
-    const [tareas, setTareas] = useState([]);
+    const [tareas, setTareas] = useState([])
 
-    // Cargar tareas desde el backend
     const cargarTareas = () => {
         axios.get('http://localhost:8080/tareas')
             .then(({ data }) => setTareas(data))
-            .catch((error) => console.error("Error al cargar tareas:", error)); // Manejo de errores
-    };
+            .catch((error) => console.error("Error al cargar tareas:", error))
+    }
 
-    useEffect(cargarTareas, []); // Llama cargarTareas al montar el componente
+    useEffect(cargarTareas, [])
 
     const handleSubmit = (e) => {
-        e.preventDefault(); // Previene el comportamiento por defecto del formulario
+        e.preventDefault()
 
-        const formData = new FormData(form.current); // Obtiene los valores del formulario
+        const formData = new FormData(form.current);
         const values = {
             nombre: formData.get('nombre'),
-            completado: formData.get('completado') === 'on', // Convierte a booleano
-        };
+            completado: formData.get('completado') === 'on',
+        }
 
         axios.post('http://localhost:8080/tareas', values)
             .then(() => {
-                cargarTareas(); // Refresca la lista de tareas
-                form.current.reset(); // Reinicia el formulario
+                cargarTareas()
+                form.current.reset()
             })
-            .catch((error) => console.error("Error al agregar tarea:", error)); // Manejo de errores
+            .catch((error) => console.error("Error al agregar tarea:", error))
 
-        if (parentOnSubmit) parentOnSubmit(values); // Llama al callback si se proporciona
-    };
+        if (parentOnSubmit) parentOnSubmit(values)
+    }
 
     return (
         <div>
@@ -47,7 +46,7 @@ const Prueba = ({ onSubmit: parentOnSubmit }) => { // Renombrado para evitar col
                     type="text"
                     className='border rounded-3xl p-2'
                     placeholder='Nombre de la tarea'
-                    required // Valida que no esté vacío
+                    required
                 />
                 <p>Completado</p>
                 <input name='completado' type='checkbox' />

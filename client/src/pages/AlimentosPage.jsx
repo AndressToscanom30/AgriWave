@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 const AlimentosPage = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/alimentos');
+        const response = await fetch('http://localhost:8080/alimentos')
         if (!response.ok) {
-          throw new Error('Error al obtener los datos del servidor');
+          throw new Error('Error al obtener los datos del servidor')
         }
-        const result = await response.json();
-        setData(result);
-        setLoading(false);
+        const result = await response.json()
+        setData(result)
+        setLoading(false)
       } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        setError(err.message)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   if (loading) {
-    return <div className="p-4">Cargando datos...</div>;
+    return <div className="p-4">Cargando datos...</div>
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error: {error}</div>;
+    return <div className="p-4 text-red-500">Error: {error}</div>
   }
 
   return (
