@@ -13,13 +13,13 @@ const FinancieraPage = () => {
       { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
       { label: "Próxima Vacunación", name: "proximaVacunacion", type: "date", icon: "fa-calendar-plus" }
     ],
-    "COSTO ALIMENTACION": [
+    "GESTION ALIMENTACION": [
       { label: "Tipo Alimento", name: "tipoAlimento", type: "text", icon: "fa-wheat" },
       { label: "Marca", name: "Marca", type: "text", icon: "fa-tag" },
       { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
       { label: "Cantidad", name: "cantidad", type: "number", icon: "fa-weight" }
     ],
-    "COSTO ANIMAL": [
+    "GESTION ANIMAL": [
       { label: "Nombre", name: "nombre", type: "text", icon: "fa-tag" },
       { label: "Raza", name: "raza", type: "text", icon: "fa-dna" },
       { label: "Fecha Nacimiento", name: "fechaNacimiento", type: "date", icon: "fa-calendar" },
@@ -37,7 +37,7 @@ const FinancieraPage = () => {
       { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
       { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-industry" }
     ],
-    "COSTO TERRENO": [
+    "GESTION DE TERRENO": [
       { label: "Tipo", name: "tipo", type: "text", icon: "fa-map" },
       { label: "Hectáreas", name: "hectareas", type: "number", icon: "fa-ruler" },
       { label: "Topografía", name: "topografia", type: "text", icon: "fa-mountain" },
@@ -65,14 +65,14 @@ const FinancieraPage = () => {
       link: "/vacunas"
     },
     {
-      title: "COSTO ALIMENTACION",
+      title: "GESTION ALIMENTACION",
       icon: "🌾",
       description: "Control de gastos en alimentación",
       stats: { total: "$2,500", month: "+15%" },
       link: "/alimentos"
     },
     {
-      title: "COSTO ANIMAL",
+      title: "GESTION ANIMAL",
       icon: "🐄",
       description: "Seguimiento de costos por animal",
       stats: { total: "$5,200", month: "-8%" },
@@ -86,7 +86,7 @@ const FinancieraPage = () => {
       link: "/produccion-animal"
     },
     {
-      title: "COSTO TERRENO",
+      title: "GESTION DE TERRENO",
       icon: "🌱",
       description: "Gestión de costos de terreno",
       stats: { total: "$12,000", year: "+5%" },
@@ -178,7 +178,7 @@ const FinancieraPage = () => {
         onClose={() => setActiveForm(null)}
         title={activeForm || ''}
         fields={froms[activeForm] || []}
-        //onSubmit={handleSubmit}
+      //onSubmit={handleSubmit}
       />
     </div>
   );
