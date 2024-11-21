@@ -30,6 +30,7 @@ const VacunasAnimalesPage = () => {
         try {
             setIsLoading(true);
             const response = await axios.get(API_URL);
+            console.log('Response:', response.data); // Verifica el formato de los datos
             setVacunas(response.data);
             calculateStats(response.data);
         } catch (err) {
@@ -74,11 +75,10 @@ const VacunasAnimalesPage = () => {
             } else if (currentAction === 'delete' && selectedItem) {
                 await axios.delete(`${API_URL}/${selectedItem.id}`);
             }
-            await fetchVacunas(); // Refresh data
+            await fetchVacunas();
             handleCloseForm();
         } catch (err) {
             console.error('Error al procesar la operación:', err);
-            // Aquí podrías añadir un manejo de errores más específico
         }
     };
 
@@ -160,10 +160,9 @@ const VacunasAnimalesPage = () => {
         );
     }
 
-    const filteredVacunas = vacunas.filter(vacuna => 
-        vacuna.nombreVacuna.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vacuna.tipoAnimal.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vacuna.identificacionAnimal.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredVacunas = vacunas.filter((vacuna) =>
+        [vacuna.nombre, vacuna.tipoAnimal, vacuna.identificacionAnimal]
+            .some((field) => field?.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return (
@@ -219,20 +218,21 @@ const VacunasAnimalesPage = () => {
             >
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <HiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+                        <HiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                         <input
                             type="text"
-                            placeholder="Buscar por nombre, animal..."
-                            className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#96BE54] focus:ring-2 focus:ring-[#96BE54]/20 outline-none"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Buscar vacuna..."
+                            className="w-full pl-10 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#96BE54]"
                         />
                     </div>
+
                     <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => setFilterOpen(!filterOpen)}
-                        className="flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-gray-200 hover:border-[#96BE54] transition-all"
+                        className="flex items-center gap-2 px-6 py-3 bg-[#96BE54] text-white rounded-xl shadow-lg hover:bg-[#769F4A] transition-all"
                     >
                         <HiFilter className="text-xl" />
                         Filtros
@@ -240,150 +240,71 @@ const VacunasAnimalesPage = () => {
                 </div>
 
                 {filterOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4"
-                    >
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Tipo Animal</label>
-                            <select className="w-full px-4 py-2 rounded-lg border-2 border-gray-200">
-                                <option value="">Todos</option>
-                                <option value="bovino">Bovino</option>
-                                <option value="ovino">Ovino</option>
-                                <option value="porcino">Porcino</option>
+                    <div className="flex gap-4 mt-6">
+                        <div className="w-1/4">
+                            <label className="block text-gray-700">Estado</label>
+                            <select className="w-full py-3 px-4 rounded-xl border border-gray-300">
+                                <option>Todos</option>
+                                <option>Aplicada</option>
+                                <option>Pendiente</option>
+                                <option>Cancelada</option>
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Estado</label>
-                            <select className="w-full px-4 py-2 rounded-lg border-2 border-gray-200">
-                                <option value="">Todos</option>
-                                <option value="aplicada">Aplicada</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="cancelada">Cancelada</option>
+                        <div className="w-1/4">
+                            <label className="block text-gray-700">Tipo Animal</label>
+                            <select className="w-full py-3 px-4 rounded-xl border border-gray-300">
+                                <option>Todos</option>
+                                <option>Bovino</option>
+                                <option>Ovino</option>
+                                <option>Porcino</option>
+                                <option>Caprino</option>
                             </select>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Veterinario</label>
-                            <select className="w-full px-4 py-2 rounded-lg border-2 border-gray-200">
-                                <option value="">Todos</option>
-                                <option value="juan">Dr. Juan Pérez</option>
-                                <option value="maria">Dra. María López</option>
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Fecha</label>
-                            <input type="date" className="w-full px-4 py-2 rounded-lg border-2 border-gray-200" />
-                        </div>
-                    </motion.div>
+                    </div>
                 )}
+
+                <div className="mt-8">
+                    <table className="min-w-full table-auto text-left">
+                        <thead>
+                            <tr className="bg-[#96BE54] text-white">
+                                <th className="py-3 px-6">Nombre</th>
+                                <th className="py-3 px-6">Fecha Vacunación</th>
+                                <th className="py-3 px-6">Precio</th>
+                                <th className="py-3 px-6">Próxima Vacunación</th>
+                                <th className="py-3 px-6"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredVacunas.map((vacuna) => (
+                                <tr key={vacuna.id} className="border-b">
+                                    <td className="py-4 px-6">{vacuna.nombre}</td>
+                                    <td className="py-4 px-6">{vacuna.fechaVacunacion}</td>
+                                    <td className="py-4 px-6">{vacuna.precio}</td>
+                                    <td className="py-4 px-6">{vacuna.proximaVacunacion}</td>
+                                    <td className="py-4 px-6">
+                                        <HiDotsVertical
+                                            className="cursor-pointer text-xl"
+                                            onClick={() => handleAction('edit', vacuna)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-white rounded-2xl shadow-md overflow-hidden"
-            >
-                <table className="w-full">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Vacuna</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Animal</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">ID</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Fecha</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Próxima</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Estado</th>
-                            <th className="px-6 py-4 text-right text-sm font-medium text-gray-500">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {vacunas.map((vacuna) => (
-                            <motion.tr
-                                key={vacuna.id}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                whileHover={{ backgroundColor: "#F9FFEF" }}
-                                className="group"
-                            >
-                                <td className="px-6 py-4 whitespace-nowrap">{vacuna.nombreVacuna}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{vacuna.tipoAnimal}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{vacuna.identificacionAnimal}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{vacuna.fechaAplicacion}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{vacuna.proximaAplicacion}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-3 py-1 rounded-full text-sm ${vacuna.estado === 'Aplicada'
-                                            ? 'bg-green-100 text-green-800'
-                                            : vacuna.estado === 'Pendiente'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-red-100 text-red-800'
-                                        }`}>
-                                        {vacuna.estado}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-right">
-                                    <div className="relative">
-                                        <motion.button
-                                            whileHover={{ scale: 1.1 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={() => setSelectedItem(vacuna.id === selectedItem ? null : vacuna.id)}
-                                            className="text-gray-400 hover:text-gray-600"
-                                        >
-                                            <HiDotsVertical className="text-xl" />
-                                        </motion.button>
-
-                                        {selectedItem === vacuna.id && (
-                                            <motion.div
-                                                initial={{ opacity: 0, scale: 0.95 }}
-                                                animate={{ opacity: 1, scale: 1 }}
-                                                className="absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
-                                            >
-                                                <div className="py-1">
-                                                    <button
-                                                        onClick={() => handleAction('view', vacuna)}
-                                                        className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    >
-                                                        Ver Detalles
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleAction('edit', vacuna)}
-                                                        className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleAction('delete', vacuna)}
-                                                        className="block w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                                                    >
-                                                        Eliminar
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleAction('record', vacuna)}
-                                                        className="block w-full px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
-                                                    >
-                                                        Historial
-                                                    </button>
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </div>
-                                </td>
-                            </motion.tr>
-                        ))}
-                    </tbody>
-                </table>
-            </motion.div>
-
-            <FormsDinamicos
-                isOpen={isFormOpen}
-                onClose={handleCloseForm}
-                title={`${currentAction === 'create' ? 'Nueva' : currentAction === 'edit' ? 'Editar' : 'Ver'} Vacuna`}
-                fields={formFields}
-                onSubmit={handleSubmit}
-                initialData={selectedItem}
-            />
+            {isFormOpen && (
+                <FormsDinamicos
+                    fields={formFields}
+                    onSubmit={handleSubmit}
+                    onClose={handleCloseForm}
+                    action={currentAction}
+                    selectedItem={selectedItem}
+                />
+            )}
         </div>
     );
 };
 
 export default VacunasAnimalesPage;
-

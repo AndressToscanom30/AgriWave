@@ -1,7 +1,9 @@
 package com.Pierina.API_REST.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
-
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,21 @@ public class VacunaController {
     private VacunaRepository vacunaRepository;
 
     @GetMapping("")
-    List<Vacuna> index(){
-
-        return vacunaRepository.findAll();
-
+    public List<Vacuna> index() {
+        List<Vacuna> vacunas = vacunaRepository.findAll();
+        
+        vacunas.forEach(vacuna -> {
+            Object fechaVacunacion = vacuna.getFechaVacunacion();
+            if (fechaVacunacion instanceof Date) {
+                Date utilDate = (Date) fechaVacunacion;
+                LocalDate localDate = utilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+                vacuna.setFechaVacunacion(localDate);
+            }
+        });
+        
+        return vacunas;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
