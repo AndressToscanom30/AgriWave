@@ -6,7 +6,6 @@ import AyudaPage from "./pages/AyudaPage";
 import Footer from "./components/footer";
 import Prueba from './pages/prueba';
 import PanelTotal from './pages/panelTotal';
-import AlimentosPage from "./pages/AlimentosPage"
 
 function App() {
   return (
@@ -19,6 +18,8 @@ function App() {
         <Route path="/panel" element={<PanelTotal />} />
         <Route path="/prueba" element={<Prueba />} />
         <Route path="/alimentos" element={<AlimentosPage />}></Route>
+        <Route path="/vacunas" element={<Vacunitas />}></Route>
+        <Route path="/produccion" element={<Produccion />}></Route>
       </Routes>
       <Footer />
     </BrowserRouter>
