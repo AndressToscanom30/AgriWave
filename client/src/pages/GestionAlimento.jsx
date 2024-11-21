@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { HiSearch, HiFilter, HiPlus, HiDotsVertical, HiChartBar } from 'react-icons/hi';
+import { useState, useEffect } from 'react';
+import { HiSearch, HiFilter, HiPlus, HiDotsVertical } from 'react-icons/hi';
 import FormsDinamicos from './FormsDinamicos';
+import axios from 'axios';
 
 const GestionAlimento = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -9,31 +10,63 @@ const GestionAlimento = () => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentAction, setCurrentAction] = useState(null);
+    const [alimentos, setAlimentos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [stats, setStats] = useState({
+        totalInventario: 0,
+        tiposAlimento: 0,
+        stockBajo: 0
+    });
 
-    const alimentos = [
-        {
-            id: 1,
-            tipoAlimento: "Concentrado Premium",
-            marca: "NutriMax",
-            precio: 75000,
-            cantidad: 50,
-            unidad: "kg",
-            fechaCompra: "2024-01-15",
-            stockMinimo: 20,
-            estado: "Disponible"
-        },
-        {
-            id: 2,
-            tipoAlimento: "Forraje Natural",
-            marca: "EcoFeed",
-            precio: 45000,
-            cantidad: 100,
-            unidad: "kg",
-            fechaCompra: "2024-02-01",
-            stockMinimo: 30,
-            estado: "Bajo Stock"
+    const API_URL = 'http://localhost:8080/alimentos';
+
+    useEffect(() => {
+        fetchAlimentos();
+    }, []);
+
+    const fetchAlimentos = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get(API_URL);
+            setAlimentos(response.data);
+            calculateStats(response.data);
+        } catch (err) {
+            setError('Error al cargar los alimentos');
+            console.error('Error:', err);
+        } finally {
+            setIsLoading(false);
         }
-    ];
+    };
+
+    const calculateStats = (data) => {
+        const totalInventario = data.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+        const tiposUnicos = new Set(data.map(item => item.tipoAlimento)).size;
+        const stockBajo = data.filter(item => item.cantidad <= item.stockMinimo).length;
+
+        setStats({
+            totalInventario,
+            tiposAlimento: tiposUnicos,
+            stockBajo
+        });
+    };
+
+    const handleSubmit = async (data) => {
+        try {
+            if (currentAction === 'create') {
+                await axios.post(API_URL, data);
+            } else if (currentAction === 'edit' && selectedItem) {
+                await axios.put(`${API_URL}/${selectedItem.id}`, data);
+            } else if (currentAction === 'delete' && selectedItem) {
+                await axios.delete(`${API_URL}/${selectedItem.id}`);
+            }
+            await fetchAlimentos(); // Refresh the data
+            handleCloseForm();
+        } catch (err) {
+            console.error('Error al procesar la operación:', err);
+            // Aquí podrías añadir un manejo de errores más específico
+        }
+    };
 
     const formFields = [
         { label: "Tipo Alimento", name: "tipoAlimento", type: "text", icon: "fa-wheat" },
@@ -46,10 +79,25 @@ const GestionAlimento = () => {
         { label: "Stock Mínimo", name: "stockMinimo", type: "number", icon: "fa-warehouse" }
     ];
 
-    const stats = [
-        { title: "Total Inventario", value: "₡1,250,000", change: "+12%", icon: "💰" },
-        { title: "Tipos de Alimento", value: "15", change: "+3", icon: "🌾" },
-        { title: "Stock Bajo", value: "3", change: "-2", icon: "⚠️" }
+    const statsDisplay = [
+        { 
+            title: "Total Inventario", 
+            value: `₡${stats.totalInventario.toLocaleString()}`, 
+            change: "+12%", 
+            icon: "💰" 
+        },
+        { 
+            title: "Tipos de Alimento", 
+            value: stats.tiposAlimento.toString(), 
+            change: "+3", 
+            icon: "🌾" 
+        },
+        { 
+            title: "Stock Bajo", 
+            value: stats.stockBajo.toString(), 
+            change: stats.stockBajo > 3 ? "+2" : "-2", 
+            icon: "⚠️" 
+        }
     ];
 
     const handleAction = (action, item = null) => {
@@ -64,10 +112,23 @@ const GestionAlimento = () => {
         setCurrentAction(null);
     };
 
-    const handleSubmit = (data) => {
-        console.log('Form submitted:', data);
-        handleCloseForm();
-    };
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#96BE54]"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                    {error}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
@@ -97,7 +158,7 @@ const GestionAlimento = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8"
                 >
-                    {stats.map((stat, index) => (
+                    {statsDisplay.map((stat, index) => (
                         <motion.div
                             key={index}
                             whileHover={{ scale: 1.02 }}
@@ -190,7 +251,6 @@ const GestionAlimento = () => {
                             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Marca</th>
                             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Precio</th>
                             <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Cantidad</th>
-                            <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Estado</th>
                             <th className="px-6 py-4 text-right text-sm font-medium text-gray-500">Acciones</th>
                         </tr>
                     </thead>
@@ -207,15 +267,6 @@ const GestionAlimento = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">{alimento.marca}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">₡{alimento.precio.toLocaleString()}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{alimento.cantidad} {alimento.unidad}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-3 py-1 rounded-full text-sm ${
-                                        alimento.estado === 'Disponible' 
-                                            ? 'bg-green-100 text-green-800' 
-                                            : 'bg-yellow-100 text-yellow-800'
-                                    }`}>
-                                        {alimento.estado}
-                                    </span>
-                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
                                     <div className="relative">
                                         <motion.button
@@ -268,6 +319,7 @@ const GestionAlimento = () => {
                 onClose={handleCloseForm}
                 title={`${currentAction === 'create' ? 'Nuevo' : currentAction === 'edit' ? 'Editar' : 'Ver'} Alimento`}
                 fields={formFields}
+                initialData={selectedItem}
                 onSubmit={handleSubmit}
             />
         </div>
