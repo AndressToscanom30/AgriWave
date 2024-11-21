@@ -37,17 +37,14 @@ const FinancieraPage = () => {
 
   return (
     <div className="pt-20 p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
-      {/* Header Section */}
       <div className="mb-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-between items-center"
         >
-          {/* Header content stays the same */}
         </motion.div>
 
-        {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-6 mt-8">
           <div className="bg-white p-6 rounded-xl shadow-md">
             <HiOutlineCash className="text-3xl text-[#96BE54] mb-2" />
@@ -58,7 +55,6 @@ const FinancieraPage = () => {
         </div>
       </div>
 
-      {/* Cards Grid */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

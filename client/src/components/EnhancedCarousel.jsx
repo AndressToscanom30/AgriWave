@@ -78,7 +78,6 @@ const EnhancedCarousel = ({ items }) => {
                 </AnimatePresence>
             </div>
 
-            {/* Navigation Arrows */}
             <button
                 className="absolute left-4 top-1/2 z-10 -translate-y-1/2 transform rounded-full bg-white/80 p-2 shadow-lg transition hover:bg-white hover:shadow-xl"
                 onClick={() => paginate(-1)}
@@ -93,7 +92,6 @@ const EnhancedCarousel = ({ items }) => {
                 <ChevronRightIcon className="h-6 w-6 text-gray-800" />
             </button>
 
-            {/* Dots Navigation */}
             <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 transform space-x-3">
                 {items.map((_, index) => (
                     <button
