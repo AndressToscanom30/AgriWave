@@ -23,7 +23,7 @@ const GestionAlimento = () => {
 
     useEffect(() => {
         fetchAlimentos();
-    }, []);
+    }, [])
 
     const fetchAlimentos = async () => {
         try {
@@ -83,13 +83,11 @@ const GestionAlimento = () => {
         { 
             title: "Total Inventario", 
             value: `₡${stats.totalInventario.toLocaleString()}`, 
-            change: "+12%", 
             icon: "💰" 
         },
         { 
             title: "Tipos de Alimento", 
-            value: stats.tiposAlimento.toString(), 
-            change: "+3", 
+            value: stats.tiposAlimento.toString(),
             icon: "🌾" 
         }
     ]

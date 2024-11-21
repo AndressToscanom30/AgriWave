@@ -1,6 +1,7 @@
 package com.Pierina.API_REST.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
@@ -10,9 +11,10 @@ import lombok.Data;
 public class Vacuna {
 
     @Id
+    private String id;
     private String nombre;
-    private Date fechaVacunacion;
+    private LocalDate fechaVacunacion;
     private float precio;
-    private Date proximaVacunacion;
+    private LocalDate proximaVacunacion;
 
 }

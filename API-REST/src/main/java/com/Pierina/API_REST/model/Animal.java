@@ -1,6 +1,8 @@
 package com.Pierina.API_REST.model;
 
 import java.sql.Date;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 
@@ -8,6 +10,8 @@ import lombok.Data;
 @Document
 public class Animal {
 
+    @Id
+    private String id;
     private String nombre;
     private String raza;
     private Date fechaNacimiento;

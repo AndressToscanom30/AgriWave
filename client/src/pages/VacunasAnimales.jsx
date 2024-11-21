@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HiSearch, HiFilter, HiPlus, HiDotsVertical } from 'react-icons/hi';
 import FormsDinamicos from './FormsDinamicos';
+import axios from 'axios';
 
 const VacunasAnimalesPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -9,60 +10,106 @@ const VacunasAnimalesPage = () => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentAction, setCurrentAction] = useState(null);
+    const [vacunas, setVacunas] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [statsData, setStatsData] = useState({
+        vacunasAplicadas: 0,
+        proximasVacunas: 0,
+        inversion: 0,
+        cobertura: 0
+    });
+
+    const API_URL = 'http://localhost:8080/vacunas';
+
+    useEffect(() => {
+        fetchVacunas();
+    }, []);
+
+    const fetchVacunas = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get(API_URL);
+            setVacunas(response.data);
+            calculateStats(response.data);
+        } catch (err) {
+            setError('Error al cargar las vacunas');
+            console.error('Error:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const calculateStats = (data) => {
+        const today = new Date();
+        const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        const aplicadas = data.filter(v => v.estado === 'Aplicada').length;
+        const proximas = data.filter(v => {
+            const fechaProxima = new Date(v.proximaAplicacion);
+            return fechaProxima <= nextWeek && fechaProxima >= today;
+        }).length;
+        const inversion = data.reduce((sum, v) => sum + (v.estado === 'Aplicada' ? v.costo : 0), 0);
+        const totalAnimales = new Set(data.map(v => v.identificacionAnimal)).size;
+        const animalesVacunados = new Set(
+            data.filter(v => v.estado === 'Aplicada')
+                .map(v => v.identificacionAnimal)
+        ).size;
+        const cobertura = totalAnimales > 0 ? (animalesVacunados / totalAnimales) * 100 : 0;
+
+        setStatsData({
+            vacunasAplicadas: aplicadas,
+            proximasVacunas: proximas,
+            inversion,
+            cobertura
+        });
+    };
+
+    const handleSubmit = async (data) => {
+        try {
+            if (currentAction === 'create') {
+                await axios.post(API_URL, data);
+            } else if (currentAction === 'edit' && selectedItem) {
+                await axios.put(`${API_URL}/${selectedItem.id}`, data);
+            } else if (currentAction === 'delete' && selectedItem) {
+                await axios.delete(`${API_URL}/${selectedItem.id}`);
+            }
+            await fetchVacunas(); // Refresh data
+            handleCloseForm();
+        } catch (err) {
+            console.error('Error al procesar la operación:', err);
+            // Aquí podrías añadir un manejo de errores más específico
+        }
+    };
 
     const stats = [
         {
             title: "Vacunas Aplicadas",
-            value: "156",
+            value: statsData.vacunasAplicadas.toString(),
             change: "+12",
             icon: "💉",
             detail: "este mes"
         },
         {
             title: "Próximas Vacunas",
-            value: "23",
+            value: statsData.proximasVacunas.toString(),
             change: "Próximos 7 días",
             icon: "📅",
             detail: "programadas"
         },
         {
             title: "Inversión",
-            value: "₡850,000",
+            value: `₡${statsData.inversion.toLocaleString()}`,
             change: "+15%",
             icon: "💰",
             detail: "vs mes anterior"
         },
         {
             title: "Cobertura",
-            value: "98%",
+            value: `${statsData.cobertura.toFixed(1)}%`,
             change: "↑",
             icon: "🎯",
             detail: "del ganado"
-        }
-    ];
-
-    const vacunas = [
-        {
-            id: 1,
-            nombreVacuna: "Aftosa",
-            tipoAnimal: "Bovino",
-            identificacionAnimal: "BOV-001",
-            fechaAplicacion: "2024-01-15",
-            proximaAplicacion: "2024-07-15",
-            veterinario: "Dr. Juan Pérez",
-            estado: "Aplicada",
-            costo: 25000
-        },
-        {
-            id: 2,
-            nombreVacuna: "Brucelosis",
-            tipoAnimal: "Bovino",
-            identificacionAnimal: "BOV-002",
-            fechaAplicacion: "2024-02-01",
-            proximaAplicacion: "2024-08-01",
-            veterinario: "Dra. María López",
-            estado: "Pendiente",
-            costo: 30000
         }
     ];
 
@@ -95,10 +142,29 @@ const VacunasAnimalesPage = () => {
         setCurrentAction(null);
     };
 
-    const handleSubmit = (data) => {
-        console.log('Form submitted:', data);
-        handleCloseForm();
-    };
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#96BE54]"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                    {error}
+                </div>
+            </div>
+        );
+    }
+
+    const filteredVacunas = vacunas.filter(vacuna => 
+        vacuna.nombreVacuna.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vacuna.tipoAnimal.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vacuna.identificacionAnimal.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">

@@ -9,6 +9,7 @@ import lombok.Data;
 public class Alimento {
 
     @Id
+    private String id;
     private String tipoAlimento;
     private String Marca;
     private float precio;
