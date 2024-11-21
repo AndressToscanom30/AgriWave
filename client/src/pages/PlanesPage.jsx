@@ -9,13 +9,13 @@ const PlanesPage = () => {
   return (
     <div className="h-screen bg-[#db5252] flex items-center justify-center">
       <h1 className="text-white text-3xl">Planes</h1>
-      <button 
-        onClick={openModal} 
+      <button
+        onClick={openModal}
         className="ml-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
       >
         Comprar Plan
       </button>
-      
+
       <ModalPago isOpen={isModalOpen} closeModal={closeModal} />
     </div>
   );

@@ -6,7 +6,7 @@ import AyudaPage from "./pages/AyudaPage";
 import Footer from "./components/footer";
 import Prueba from './pages/prueba';
 import PanelTotal from './pages/panelTotal';
-import AlimentosPage from "./pages/alimentosPage";
+import AlimentosPage from "./pages/AlimentosPage";
 
 function App() {
   return (

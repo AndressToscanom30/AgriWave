@@ -63,7 +63,7 @@ const InventarioTerreno = () => {
   };
 
   return (
-    <div className="pt-20 p-8 bg-gradient-to-br from-[#F9FFEF]/50 to-white/30 min-h-screen">
+    <div className="p-8 bg-gradient-to-br from-[#F9FFEF]/50 to-white/30 min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

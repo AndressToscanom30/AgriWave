@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import imagenAgriwave from "../imgs/agriwave.jpeg";
 import FinancieraPage from './FinancieraPage';
-import InventarioTerreno from './InventarioTerreno';
+import InventarioTerreno from './inventarioterreno';
 
 const MenuItem = ({ icon, title, isActive, onClick }) => (
     <motion.button

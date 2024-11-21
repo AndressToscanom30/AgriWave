@@ -1,7 +1,61 @@
 import { motion } from 'framer-motion';
 import { HiOutlineCash } from 'react-icons/hi';
+import { useState } from 'react';
+import FormsDinamicos from './FormsDinamicos';
 
 const FinancieraPage = () => {
+  const [activeForm, setActiveForm] = useState(null);
+
+  const froms = {
+    "VACUNAS ANIMALES": [
+      { label: "Nombre", name: "nombre", type: "text", icon: "fa-syringe" },
+      { label: "Fecha Vacunación", name: "fechaVacunacion", type: "date", icon: "fa-calendar" },
+      { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
+      { label: "Próxima Vacunación", name: "proximaVacunacion", type: "date", icon: "fa-calendar-plus" }
+    ],
+    "COSTO ALIMENTACION": [
+      { label: "Tipo Alimento", name: "tipoAlimento", type: "text", icon: "fa-wheat" },
+      { label: "Marca", name: "Marca", type: "text", icon: "fa-tag" },
+      { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
+      { label: "Cantidad", name: "cantidad", type: "number", icon: "fa-weight" }
+    ],
+    "COSTO ANIMAL": [
+      { label: "Nombre", name: "nombre", type: "text", icon: "fa-tag" },
+      { label: "Raza", name: "raza", type: "text", icon: "fa-dna" },
+      { label: "Fecha Nacimiento", name: "fechaNacimiento", type: "date", icon: "fa-calendar" },
+      { label: "Peso", name: "peso", type: "number", icon: "fa-weight" },
+      { label: "Origen", name: "origen", type: "text", icon: "fa-map-marker" },
+      { label: "Costo Animal", name: "costoAnimal", type: "number", icon: "fa-dollar-sign" },
+      { label: "Fecha Compra", name: "fechaCompra", type: "date", icon: "fa-shopping-cart" },
+      { label: "Documentado", name: "documentado", type: "checkbox", icon: "fa-file-alt" },
+      { label: "Adicional", name: "adicional", type: "number", icon: "fa-plus-circle" }
+    ],
+    "PRODUCCION ANIMAL": [
+      { label: "Tipo Animal", name: "tipoAnimal", type: "text", icon: "fa-cow" },
+      { label: "Tipo Producción", name: "tipoProduccion", type: "text", icon: "fa-industry" },
+      { label: "Cantidad Diaria Producción", name: "cantidadDiariaProduccion", type: "number", icon: "fa-chart-line" },
+      { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
+      { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-industry" }
+    ],
+    "COSTO TERRENO": [
+      { label: "Tipo", name: "tipo", type: "text", icon: "fa-map" },
+      { label: "Hectáreas", name: "hectareas", type: "number", icon: "fa-ruler" },
+      { label: "Topografía", name: "topografia", type: "text", icon: "fa-mountain" },
+      { label: "Condiciones Ambientales", name: "condicionesAmb", type: "text", icon: "fa-cloud-sun" },
+      { label: "Ubicación", name: "ubicacion", type: "text", icon: "fa-location-dot" },
+      { label: "Zonificación", name: "zonificacion", type: "text", icon: "fa-map-location" },
+      { label: "Costo Terreno", name: "costoTerreno", type: "number", icon: "fa-dollar-sign" },
+      { label: "Costo Mantenimiento", name: "costoMantenimiento", type: "number", icon: "fa-tools" },
+      { label: "Costo Construcciones", name: "costoConstrucciones", type: "number", icon: "fa-building" },
+      { label: "Costo Arriendo", name: "costoArriendo", type: "number", icon: "fa-key" },
+      { label: "Adicionales", name: "adicionales", type: "number", icon: "fa-plus-circle" }
+    ],
+    "TAREAS": [
+      { label: "Nombre", name: "nombre", type: "text", icon: "fa-tasks" },
+      { label: "Completado", name: "completado", type: "checkbox", icon: "fa-check-square" }
+    ]
+  };
+
   const cards = [
     {
       title: "VACUNAS ANIMALES",
@@ -40,8 +94,16 @@ const FinancieraPage = () => {
     }
   ];
 
+  /**
+   *   const handleSubmit = (formData) => {
+    console.log('Form submitted:', formData);
+    setActiveForm(null);
+    };
+   * 
+   */
+
   return (
-    <div className="pt-20 p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
+    <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
       <div className="mb-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -93,13 +155,16 @@ const FinancieraPage = () => {
               </p>
 
               <div className="flex flex-col space-y-2">
-                <a 
-                  href={card.link} 
+                <a
+                  href={card.link}
                   className="text-center bg-[#E6E9D9] text-[#3F523B] hover:bg-[#d6d9c9] px-6 py-2 rounded-lg transition-all hover:scale-105 flex items-center justify-center"
                 >
                   Ver Registro
                 </a>
-                <button className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-6 py-2 rounded-lg transition-all hover:scale-105">
+                <button
+                  onClick={() => setActiveForm(card.title)}
+                  className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-6 py-2 rounded-lg transition-all hover:scale-105"
+                >
                   Agregar Registro
                 </button>
               </div>
@@ -107,9 +172,16 @@ const FinancieraPage = () => {
           </motion.div>
         ))}
       </motion.div>
+
+      <FormsDinamicos
+        isOpen={!!activeForm}
+        onClose={() => setActiveForm(null)}
+        title={activeForm || ''}
+        fields={froms[activeForm] || []}
+        //onSubmit={handleSubmit}
+      />
     </div>
   );
-
 };
 
-export default FinancieraPage
+export default FinancieraPage;
