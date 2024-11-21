@@ -91,14 +91,8 @@ const GestionAlimento = () => {
             value: stats.tiposAlimento.toString(), 
             change: "+3", 
             icon: "🌾" 
-        },
-        { 
-            title: "Stock Bajo", 
-            value: stats.stockBajo.toString(), 
-            change: stats.stockBajo > 3 ? "+2" : "-2", 
-            icon: "⚠️" 
         }
-    ];
+    ]
 
     const handleAction = (action, item = null) => {
         setCurrentAction(action);
@@ -166,11 +160,6 @@ const GestionAlimento = () => {
                         >
                             <div className="flex items-center justify-between">
                                 <span className="text-3xl">{stat.icon}</span>
-                                <span className={`text-xs ${
-                                    stat.change.includes('+') ? 'text-green-500' : 'text-red-500'
-                                }`}>
-                                    {stat.change}
-                                </span>
                             </div>
                             <h3 className="text-sm text-gray-500 mt-4">{stat.title}</h3>
                             <p className="text-2xl font-bold text-[#47624F]">{stat.value}</p>
