@@ -41,9 +41,10 @@ const AlimentosPage = () => {
         <ul className="space-y-4">
           {data.map((item, index) => (
             <li key={index} className="p-4 bg-gray-100 rounded shadow">
-              <p><strong>Nombre:</strong> {item.nombre}</p>
-              <p><strong>Costo:</strong> {item.costo}</p>
-              <p><strong>Descripción:</strong> {item.descripcion}</p>
+              <p><strong>Tipo Alimento:</strong> {item.tipoAlimento}</p>
+              <p><strong>Marca:</strong> {item.marca}</p>
+              <p><strong>Precio:</strong> {item.precio}</p>
+              <p><strong>Cantidad:</strong> {item.cantidad}</p>
             </li>
           ))}
         </ul>

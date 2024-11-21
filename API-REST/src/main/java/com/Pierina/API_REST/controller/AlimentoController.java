@@ -26,7 +26,6 @@ public class AlimentoController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     Alimento create(@RequestBody Alimento alimento){
-
         return alimentoRepository.save(alimento);
 
     }
