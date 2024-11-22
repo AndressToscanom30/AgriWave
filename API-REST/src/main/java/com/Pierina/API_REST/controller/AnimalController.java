@@ -1,5 +1,8 @@
 package com.Pierina.API_REST.controller;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +20,18 @@ public class AnimalController {
 
     @GetMapping("")
     public List<Animal> index() {
-        return animalRepository.findAll();
+        List<Animal> animales = animalRepository.findAll();
+        animales.forEach(animal -> {
+            Object fechaNacimiento = animal.getFechaNacimiento();
+            if (fechaNacimiento instanceof Date) {
+                Date utilDate = (Date) fechaNacimiento;
+                LocalDate localDate = utilDate.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+                animal.setFechaNacimiento(localDate);
+            }
+        });
+        return animales;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
