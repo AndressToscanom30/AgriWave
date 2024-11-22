@@ -13,12 +13,28 @@ const GestionAnimal = () => {
     const [gestionAnimal, setGestionAnimal] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        nombre: '',
+        raza: '',
+        pesoMin: '',
+        pesoMax: '',
+        costoMin: '',
+        costoMax: ''
+    });
 
     const API_URL = 'http://localhost:8080/animales';
 
     useEffect(() => {
         fetchGestionAnimal();
     }, []);
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const fetchGestionAnimal = async () => {
         try {
@@ -33,12 +49,41 @@ const GestionAnimal = () => {
         }
     };
 
+
+
     const handleSubmit = async (data) => {
         try {
+            if (!data.nombre || !data.raza || !data.fechaNacimiento || !data.peso ||
+                !data.origen || !data.costoAnimal || !data.fechaCompra) {
+                alert('Todos los campos son obligatorios excepto Adicional');
+                return;
+            }
+
+            if (parseFloat(data.peso) <= 0 || parseFloat(data.costoAnimal) <= 0) {
+                alert('El peso y costo del animal deben ser mayores a 0');
+                return;
+            }
+
+            const fechaNacimiento = new Date(data.fechaNacimiento);
+            const fechaCompra = new Date(data.fechaCompra);
+            const today = new Date();
+
+            if (fechaNacimiento > today || fechaCompra > today) {
+                alert('Las fechas no pueden ser futuras');
+                return;
+            }
+
+            if (fechaCompra < fechaNacimiento) {
+                alert('La fecha de compra no puede ser anterior a la fecha de nacimiento');
+                return;
+            }
+
             const formattedData = {
                 ...data,
-                cantidadDiariaProduccion: parseFloat(data.cantidadDiariaProduccion),
-                costoProducto: parseFloat(data.costoProducto)
+                peso: parseFloat(data.peso),
+                costoAnimal: parseFloat(data.costoAnimal),
+                adicional: parseFloat(data.adicional) || 0,
+                documentado: Boolean(data.documentado)
             };
 
             if (currentAction === 'create') {
@@ -54,6 +99,7 @@ const GestionAnimal = () => {
             handleCloseForm();
         } catch (err) {
             console.error('Error al procesar la operación:', err);
+            alert('Error al guardar los datos');
         }
     };
 
@@ -88,7 +134,7 @@ const GestionAnimal = () => {
     };
 
     const formFields = [
-        { label: "Nombre", name: "nombre", type: "text", icon: "fa-tag" },
+        { label: "Nombre", name: "nombre", type: "text", icon: "fa-tag", required: true },
         { label: "Raza", name: "raza", type: "text", icon: "fa-dna" },
         { label: "Fecha Nacimiento", name: "fechaNacimiento", type: "date", icon: "fa-calendar" },
         { label: "Peso", name: "peso", type: "number", icon: "fa-weight" },
@@ -118,12 +164,26 @@ const GestionAnimal = () => {
         );
     }
 
-    const filteredGestionAnimal = gestionAnimal.filter((item) =>
-        Object.values(item)
+    const filteredGestionAnimal = gestionAnimal.filter((item) => {
+        const matchesSearch = Object.values(item)
             .join(' ')
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-    );
+            .includes(searchTerm.toLowerCase());
+
+        const matchesNombre = !filters.nombre ||
+            item.nombre.toLowerCase().includes(filters.nombre.toLowerCase());
+
+        const matchesRaza = !filters.raza ||
+            item.raza.toLowerCase().includes(filters.raza.toLowerCase());
+
+        const matchesPeso = (!filters.pesoMin || item.peso >= parseFloat(filters.pesoMin)) &&
+            (!filters.pesoMax || item.peso <= parseFloat(filters.pesoMax));
+
+        const matchesCosto = (!filters.costoMin || item.costoAnimal >= parseFloat(filters.costoMin)) &&
+            (!filters.costoMax || item.costoAnimal <= parseFloat(filters.costoMax));
+
+        return matchesSearch && matchesNombre && matchesRaza && matchesPeso && matchesCosto;
+    });
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
@@ -226,7 +286,110 @@ const GestionAnimal = () => {
                         Filtros
                     </motion.button>
                 </div>
-
+                {filterOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-4 p-4 bg-white rounded-xl shadow-md"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Nombre
+                                </label>
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value={filters.nombre}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por nombre..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Raza
+                                </label>
+                                <input
+                                    type="text"
+                                    name="raza"
+                                    value={filters.raza}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por raza..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Peso Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="pesoMin"
+                                    value={filters.pesoMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Peso mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Peso Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="pesoMax"
+                                    value={filters.pesoMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Peso máximo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMin"
+                                    value={filters.costoMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMax"
+                                    value={filters.costoMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo máximo..."
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={() => setFilters({
+                                    nombre: '',
+                                    raza: '',
+                                    pesoMin: '',
+                                    pesoMax: '',
+                                    costoMin: '',
+                                    costoMax: ''
+                                })}
+                                className="px-4 py-2 text-sm text-[#96BE54] hover:text-[#769F4A]"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto">
                         <thead>

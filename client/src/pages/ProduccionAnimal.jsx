@@ -13,6 +13,14 @@ const ProduccionAnimal = () => {
     const [produccion, setProduccion] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        tipoAnimal: '',
+        tipoProduccion: '',
+        cantidadMin: '',
+        cantidadMax: '',
+        costoMin: '',
+        costoMax: ''
+    });
 
     const API_URL = 'http://localhost:8080/produccion-animal';
 
@@ -35,9 +43,24 @@ const ProduccionAnimal = () => {
 
     const handleSubmit = async (data) => {
         try {
+            if (!data.tipoAnimal || !data.tipoProduccion || !data.cantidadDiariaProduccion || !data.costoProducto) {
+                alert('Los campos Tipo Animal, Tipo Producción, Cantidad Diaria y Costo son obligatorios');
+                return;
+            }
+
+            if (parseFloat(data.cantidadDiariaProduccion) <= 0) {
+                alert('La cantidad diaria debe ser mayor a 0');
+                return;
+            }
+
+            if (parseFloat(data.costoProducto) <= 0) {
+                alert('El costo del producto debe ser mayor a 0');
+                return;
+            }
+
             const formattedData = {
                 ...data,
-                cantidadDiaria: parseFloat(data.cantidadDiaria),
+                cantidadDiariaProduccion: parseFloat(data.cantidadDiariaProduccion),
                 costoProducto: parseFloat(data.costoProducto)
             };
 
@@ -53,7 +76,8 @@ const ProduccionAnimal = () => {
             await fetchProduccion();
             handleCloseForm();
         } catch (err) {
-            console.error('Error al procesar la operación:', err);
+            console.error('Error:', err);
+            alert('Error al guardar los datos');
         }
     };
 
@@ -113,12 +137,34 @@ const ProduccionAnimal = () => {
         );
     }
 
-    const filteredProduccion = produccion.filter((item) =>
-        Object.values(item)
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const filteredProduccion = produccion.filter((item) => {
+        const matchesSearch = Object.values(item)
             .join(' ')
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-    );
+            .includes(searchTerm.toLowerCase());
+
+        const matchesTipoAnimal = !filters.tipoAnimal ||
+            item.tipoAnimal.toLowerCase().includes(filters.tipoAnimal.toLowerCase());
+
+        const matchesTipoProduccion = !filters.tipoProduccion ||
+            item.tipoProduccion.toLowerCase().includes(filters.tipoProduccion.toLowerCase());
+
+        const matchesCantidad = (!filters.cantidadMin || item.cantidadDiariaProduccion >= parseFloat(filters.cantidadMin)) &&
+            (!filters.cantidadMax || item.cantidadDiariaProduccion <= parseFloat(filters.cantidadMax));
+
+        const matchesCosto = (!filters.costoMin || item.costoProducto >= parseFloat(filters.costoMin)) &&
+            (!filters.costoMax || item.costoProducto <= parseFloat(filters.costoMax));
+
+        return matchesSearch && matchesTipoAnimal && matchesTipoProduccion && matchesCantidad && matchesCosto;
+    });
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
@@ -233,6 +279,110 @@ const ProduccionAnimal = () => {
                         Filtros
                     </motion.button>
                 </div>
+                {filterOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-4 p-4 bg-white rounded-xl shadow-md"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tipo Animal
+                                </label>
+                                <input
+                                    type="text"
+                                    name="tipoAnimal"
+                                    value={filters.tipoAnimal}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por tipo animal..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tipo Producción
+                                </label>
+                                <input
+                                    type="text"
+                                    name="tipoProduccion"
+                                    value={filters.tipoProduccion}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por tipo producción..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Cantidad Mínima
+                                </label>
+                                <input
+                                    type="number"
+                                    name="cantidadMin"
+                                    value={filters.cantidadMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Cantidad mínima..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Cantidad Máxima
+                                </label>
+                                <input
+                                    type="number"
+                                    name="cantidadMax"
+                                    value={filters.cantidadMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Cantidad máxima..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMin"
+                                    value={filters.costoMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMax"
+                                    value={filters.costoMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo máximo..."
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={() => setFilters({
+                                    tipoAnimal: '',
+                                    tipoProduccion: '',
+                                    cantidadMin: '',
+                                    cantidadMax: '',
+                                    costoMin: '',
+                                    costoMax: ''
+                                })}
+                                className="px-4 py-2 text-sm text-[#96BE54] hover:text-[#769F4A]"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto">
                         <thead>
