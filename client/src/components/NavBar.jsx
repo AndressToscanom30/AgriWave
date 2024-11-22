@@ -17,7 +17,7 @@ function NavBar() {
     {
       email: "pieri@gmail.com",
       password: "pieri123",
-      name: "Perina"
+      name: "Pierina"
     }
   ];
 
@@ -175,7 +175,7 @@ function NavBar() {
                   </>
                 ) : (
                   <>
-                    <span className="text-[#6DAD58] font-medium">
+                    <span className="text-[#6DAD58] font-medium mt-2">
                       Bienvenida, {currentUser?.name}
                     </span>
                     <motion.button
