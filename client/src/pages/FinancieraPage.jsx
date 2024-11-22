@@ -74,7 +74,7 @@ const FinancieraPage = () => {
     "PRODUCCION ANIMAL": [
       { label: "Tipo Animal", name: "tipoAnimal", type: "text", icon: "fa-cow" },
       { label: "Tipo Producción", name: "tipoProduccion", type: "text", icon: "fa-industry" },
-      { label: "Cantidad Diaria", name: "cantidadDiaria", type: "number", icon: "fa-chart-line" },
+      { label: "Cantidad Diaria", name: "cantidadDiariaProduccion", type: "number", icon: "fa-chart-line" },
       { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
       { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-plus-circle" }
     ],

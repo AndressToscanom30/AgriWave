@@ -90,7 +90,7 @@ const ProduccionAnimal = () => {
     const formFields = [
         { label: "Tipo Animal", name: "tipoAnimal", type: "text", icon: "fa-cow" },
         { label: "Tipo Producción", name: "tipoProduccion", type: "text", icon: "fa-industry" },
-        { label: "Cantidad Diaria", name: "cantidadDiaria", type: "number", icon: "fa-chart-line" },
+        { label: "Cantidad Diaria", name: "cantidadDiariaProduccion", type: "number", icon: "fa-chart-line" },
         { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
         { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-plus-circle" }
     ];
@@ -237,12 +237,12 @@ const ProduccionAnimal = () => {
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-[#96BE54] text-white">
-                                <th className="py-3 px-6 rounded-tl-xl text-left">Animal</th>
-                                <th className="py-3 px-6 text-left">Tipo Producción</th>
-                                <th className="py-3 px-6 text-left">Cantidad Diaria</th>
-                                <th className="py-3 px-6 text-left">Costo</th>
-                                <th className="py-3 px-6 text-left">Producción Secundaria</th>
-                                <th className="py-3 px-6 rounded-tr-xl text-center">Acciones</th>
+                                <th className="py-3 px-6 rounded-tl-xl text-left w-[15%]">Animal</th>
+                                <th className="py-3 px-6 text-left w-[20%]">Tipo Producción</th>
+                                <th className="py-3 px-6 text-left w-[15%]">Cantidad Diaria</th>
+                                <th className="py-3 px-6 text-left w-[15%]">Costo</th>
+                                <th className="py-3 px-6 text-left w-[25%]">Producción Secundaria</th>
+                                <th className="py-3 px-6 rounded-tr-xl text-center w-[10%]">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -252,11 +252,11 @@ const ProduccionAnimal = () => {
                                     className="border-b hover:bg-gray-50"
                                     whileHover={{ backgroundColor: "#F9FFEF" }}
                                 >
-                                    <td className="py-4 px-6 text-left">{item.tipoAnimal}</td>
-                                    <td className="py-4 px-6 text-left">{item.tipoProduccion}</td>
-                                    <td className="py-4 px-6 text-left">{item.cantidadDiaria}</td>
-                                    <td className="py-4 px-6 text-left">₡{item.costoProducto.toLocaleString()}</td>
-                                    <td className="py-4 px-6 text-left">{item.tipoProduccionSec}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.tipoAnimal}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.tipoProduccion}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.cantidadDiariaProduccion}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoProducto.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.tipoProduccionSec}</td>
                                     <td className="py-4 px-6">
                                         <div className="flex items-center justify-center gap-2">
                                             <button
@@ -278,6 +278,7 @@ const ProduccionAnimal = () => {
                         </tbody>
                     </table>
                 </div>
+
 
             </motion.div>
 
