@@ -230,23 +230,15 @@ const PanelTotal = () => {
                                             <h2 className="text-sm font-semibold text-[#3F523B] px-3 uppercase tracking-wider">
                                                 Acciones Rápidas
                                             </h2>
-                                            <div className="grid grid-cols-2 gap-3 p-3">
+                                            <div className="p-3">
                                                 <motion.button
                                                     whileHover={{ scale: 1.05 }}
                                                     whileTap={{ scale: 0.95 }}
-                                                    className="bg-[#F9FFEF] p-3 rounded-xl hover:bg-[#E6E9D9] transition-colors text-center"
+                                                    className="w-full bg-[#F9FFEF] p-3 rounded-xl hover:bg-[#E6E9D9] transition-colors text-center"
                                                     onClick={() => setCurrentView('reportes')}
                                                 >
                                                     <span className="block text-xl mb-1">📊</span>
                                                     <span className="text-xs text-[#3F523B]">Reportes</span>
-                                                </motion.button>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.05 }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                    className="bg-[#F9FFEF] p-3 rounded-xl hover:bg-[#E6E9D9] transition-colors text-center"
-                                                >
-                                                    <span className="block text-xl mb-1">👤</span>
-                                                    <span className="text-xs text-[#3F523B]">Perfil</span>
                                                 </motion.button>
                                             </div>
                                         </motion.div>
@@ -273,10 +265,9 @@ const PanelTotal = () => {
                         {currentView === 'animal' && <GestionAnimal />}
                         {currentView === 'produccion' && <ProduccionAnimalPage />}
                         {currentView === 'terreno' && <GestionTerreno />}
-                        {currentView === 'reportes' && <Reportes />} 
+                        {currentView === 'reportes' && <Reportes />}
                     </motion.div>
                 </AnimatePresence>
-
             </div>
         </div>
     );
