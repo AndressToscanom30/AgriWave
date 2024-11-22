@@ -9,7 +9,7 @@ const Comp1 = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <span className="inline-block bg-[#6DAD58]/10 text-[#6DAD58] text-sm font-semibold px-4 py-2 rounded-full">
+        <span className="mt-[-50px] inline-block bg-[#6DAD58]/10 text-[#6DAD58] text-sm font-semibold px-4 py-2 rounded-full">
           HERRAMIENTA IDEAL PARA MANEJAR TU GRANJA
         </span>
       </motion.div>
