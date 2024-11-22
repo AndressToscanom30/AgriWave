@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import pse from "../imgs/PSE.png";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -8,6 +8,49 @@ function NavBar() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const mockUsers = [
+    {
+      email: "pieri@gmail.com",
+      password: "pieri123",
+      name: "Perina"
+    }
+  ];
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    
+    const user = mockUsers.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      setCurrentUser(user);
+      setIsLoggedIn(true);
+      setIsLoginOpen(false);
+      setEmail("");
+      setPassword("");
+    } else {
+      alert("Credenciales incorrectas");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    setCurrentUser(null);
+    setIsLoggedIn(false);
+  };
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const modalVariants = {
     hidden: {
@@ -99,7 +142,7 @@ function NavBar() {
                 Inicio
               </a>
               <a href="/panel" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
-                Gestión total final para todas
+                Gestión total
               </a>
               <button
                 onClick={() => setIsPlanModalOpen(true)}
@@ -109,22 +152,40 @@ function NavBar() {
               </button>
 
               <div className="flex space-x-4">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsLoginOpen(true)}
-                  className="border-2 border-[#6DAD58] rounded-full px-6 py-2 text-[#6DAD58] hover:bg-[#6DAD58] hover:text-white transition-all duration-300 font-medium"
-                >
-                  Iniciar sesión
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsRegisterOpen(true)}
-                  className="bg-[#6DAD58] rounded-full px-6 py-2 text-white hover:bg-green-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
-                >
-                  Registrarme
-                </motion.button>
+                {!isLoggedIn ? (
+                  <>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsLoginOpen(true)}
+                      className="border-2 border-[#6DAD58] rounded-full px-6 py-2 text-[#6DAD58] hover:bg-[#6DAD58] hover:text-white transition-all duration-300 font-medium"
+                    >
+                      Iniciar sesión
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setIsRegisterOpen(true)}
+                      className="bg-[#6DAD58] rounded-full px-6 py-2 text-white hover:bg-green-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
+                    >
+                      Registrarme
+                    </motion.button>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-[#6DAD58] font-medium">
+                      Bienvenido, {currentUser?.name}
+                    </span>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleLogout}
+                      className="bg-[#6DAD58] rounded-full px-6 py-2 text-white hover:bg-green-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
+                    >
+                      Cerrar sesión
+                    </motion.button>
+                  </>
+                )}
               </div>
             </div>
 
@@ -162,26 +223,41 @@ function NavBar() {
                   >
                     Planes
                   </button>
-                  <motion.button
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setIsLoginOpen(true);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full py-2 text-[#6DAD58] border-2 border-[#6DAD58] rounded-lg hover:bg-[#6DAD58] hover:text-white transition-all duration-300"
-                  >
-                    Iniciar sesión
-                  </motion.button>
-                  <motion.button
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      setIsRegisterOpen(true);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full py-2 bg-[#6DAD58] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
-                  >
-                    Registrarme
-                  </motion.button>
+                  {!isLoggedIn ? (
+                    <>
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          setIsLoginOpen(true);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="w-full py-2 text-[#6DAD58] border-2 border-[#6DAD58] rounded-lg hover:bg-[#6DAD58] hover:text-white transition-all duration-300"
+                      >
+                        Iniciar sesión
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          setIsRegisterOpen(true);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="w-full py-2 bg-[#6DAD58] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
+                      >
+                        Registrarme
+                      </motion.button>
+                    </>
+                  ) : (
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full py-2 bg-[#6DAD58] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
+                    >
+                      Cerrar sesión
+                    </motion.button>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -230,7 +306,7 @@ function NavBar() {
                   <p className="text-gray-600 mt-2">Ingresa a tu cuenta de Agriwave</p>
                 </div>
 
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleLogin}>
                   <motion.div whileHover={{ scale: 1.02 }} className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700 ml-1">
                       Correo electrónico
@@ -239,6 +315,8 @@ function NavBar() {
                       <i className="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#6DAD58] focus:ring-2 focus:ring-[#6DAD58]/20 outline-none transition-all duration-300"
                         placeholder="correo@ejemplo.com"
                       />
@@ -253,6 +331,8 @@ function NavBar() {
                       <i className="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                       <input
                         type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#6DAD58] focus:ring-2 focus:ring-[#6DAD58]/20 outline-none transition-all duration-300"
                         placeholder="••••••••"
                       />
@@ -432,7 +512,6 @@ function NavBar() {
         )}
       </AnimatePresence>
 
-
       {isPlanModalOpen && (
         <motion.div
           variants={overlayVariants}
@@ -497,8 +576,8 @@ function NavBar() {
         </motion.div>
       )}
       <div className="mt-20"></div>
-    </div >
-  )
+    </div>
+  );
 }
 
 export default NavBar
