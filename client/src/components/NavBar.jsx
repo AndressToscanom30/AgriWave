@@ -141,9 +141,11 @@ function NavBar() {
               <a href="/" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                 Inicio
               </a>
-              <a href="/panel" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
-                Gestión total
-              </a>
+              {isLoggedIn && (
+                <a href="/panel" className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
+                  Gestión total
+                </a>
+              )}
               <button
                 onClick={() => setIsPlanModalOpen(true)}
                 className="text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium"
@@ -174,7 +176,7 @@ function NavBar() {
                 ) : (
                   <>
                     <span className="text-[#6DAD58] font-medium">
-                      Bienvenido, {currentUser?.name}
+                      Bienvenida, {currentUser?.name}
                     </span>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -211,9 +213,11 @@ function NavBar() {
                   <a href="/" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
                     Inicio
                   </a>
-                  <a href="/panel" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
-                    Gestión total
-                  </a>
+                  {isLoggedIn && (
+                    <a href="/panel" className="py-2 text-gray-700 hover:text-[#6DAD58] transition-all duration-300 font-medium">
+                      Gestión total
+                    </a>
+                  )}
                   <button
                     onClick={() => {
                       setIsPlanModalOpen(true);
