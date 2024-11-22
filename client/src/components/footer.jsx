@@ -28,10 +28,10 @@ const Footer = () => {
     e.preventDefault();
 
     const templateParams = {
-      to_email: subscriptionEmail,
+      to_email: subscriptionEmail, 
+      from_name: "AgriWave Team",
       message: "¡Gracias por suscribirte a Agriwave! Recibirás todas nuestras actualizaciones y novedades sobre gestión ganadera."
     };
-
     try {
       const response = await emailjs.send(
         SERVICE_ID,
