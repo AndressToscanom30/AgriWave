@@ -184,7 +184,7 @@ function NavBar() {
                       onClick={handleLogout}
                       className="bg-[#6DAD58] rounded-full px-6 py-2 text-white hover:bg-green-600 transition-all duration-300 font-medium shadow-md hover:shadow-lg"
                     >
-                      Cerrar sesión
+                      <a href="/">Cerrar sesión</a>
                     </motion.button>
                   </>
                 )}
@@ -259,7 +259,7 @@ function NavBar() {
                       }}
                       className="w-full py-2 bg-[#6DAD58] text-white rounded-lg hover:bg-green-600 transition-all duration-300"
                     >
-                      Cerrar sesión
+                      <a href="/">Cerrar sesión</a>
                     </motion.button>
                   )}
                 </div>
