@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { HiSearch, HiFilter, HiPlus, HiDotsVertical, HiChartBar, HiTrash, HiPencil } from 'react-icons/hi';
+import { HiSearch, HiFilter, HiPlus, HiDotsVertical, HiChartBar, HiTrash, HiPencil, HiCurrencyDollar, HiCalendar } from 'react-icons/hi';
 import FormsDinamicos from './FormsDinamicos';
 import axios from 'axios';
 
@@ -35,11 +35,21 @@ const ProduccionAnimal = () => {
 
     const handleSubmit = async (data) => {
         try {
+            const formattedData = {
+                ...data,
+                cantidadDiaria: parseFloat(data.cantidadDiaria),
+                costoProducto: parseFloat(data.costoProducto)
+            };
+
             if (currentAction === 'create') {
-                await axios.post(API_URL, data);
+                await axios.post(API_URL, formattedData);
             } else if (currentAction === 'edit' && selectedItem) {
-                await axios.put(`${API_URL}/${selectedItem.id}`, data);
+                await axios.put(`${API_URL}/${selectedItem.id}`, {
+                    ...formattedData,
+                    id: selectedItem.id
+                });
             }
+
             await fetchProduccion();
             handleCloseForm();
         } catch (err) {
@@ -48,11 +58,13 @@ const ProduccionAnimal = () => {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${API_URL}/${id}`);
-            await fetchProduccion();
-        } catch (err) {
-            console.error('Error al eliminar:', err);
+        if (window.confirm('¿Está seguro de eliminar este registro?')) {
+            try {
+                await axios.delete(`${API_URL}/${id}`);
+                await fetchProduccion();
+            } catch (err) {
+                console.error('Error al eliminar:', err);
+            }
         }
     };
 
@@ -69,31 +81,18 @@ const ProduccionAnimal = () => {
     };
 
     const stats = {
-        totalProduccion: produccion.reduce((acc, curr) => acc + curr.cantidadDiaria, 0),
-        promedioCalidad: produccion.reduce((acc, curr) => acc + (curr.calidad === 'Premium' ? 1 : 0), 0) / produccion.length * 100,
-        totalIngresos: produccion.reduce((acc, curr) => acc + curr.costoProducto, 0),
-        produccionMensual: produccion.filter(p => {
-            const fecha = new Date(p.fechaRegistro);
-            const hoy = new Date();
-            return fecha.getMonth() === hoy.getMonth() && fecha.getFullYear() === hoy.getFullYear();
-        }).length
+        totalProduccion: produccion.reduce((acc, curr) => acc + (parseFloat(curr.cantidadDiaria) || 0), 0),
+        totalIngresos: produccion.reduce((acc, curr) => acc + (parseFloat(curr.costoProducto) || 0), 0),
+        tiposUnicos: new Set(produccion.map(p => p.tipoProduccion)).size,
+        produccionMensual: produccion.length
     };
 
     const formFields = [
         { label: "Tipo Animal", name: "tipoAnimal", type: "text", icon: "fa-cow" },
-        { label: "Identificación", name: "identificacion", type: "text", icon: "fa-id-card" },
         { label: "Tipo Producción", name: "tipoProduccion", type: "text", icon: "fa-industry" },
         { label: "Cantidad Diaria", name: "cantidadDiaria", type: "number", icon: "fa-chart-line" },
-        {
-            label: "Unidad", name: "unidad", type: "select", icon: "fa-ruler",
-            options: ["L", "kg", "g", "unidades"]
-        },
         { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
-        {
-            label: "Calidad", name: "calidad", type: "select", icon: "fa-star",
-            options: ["Premium", "Alta", "Media", "Baja"]
-        },
-        { label: "Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-plus-circle" }
+        { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-plus-circle" }
     ];
 
     if (isLoading) {
@@ -155,12 +154,55 @@ const ProduccionAnimal = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Total Producción</p>
-                                <p className="text-2xl font-bold text-[#47624F]">{stats.totalProduccion}</p>
+                                <p className="text-2xl font-bold text-[#47624F]">{stats.totalProduccion.toFixed(2)}</p>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* Similar cards for other stats */}
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="bg-white p-6 rounded-xl shadow-lg"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                                <HiCurrencyDollar className="text-2xl text-[#96BE54]" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500">Total Ingresos</p>
+                                <p className="text-2xl font-bold text-[#47624F]">₡{stats.totalIngresos.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="bg-white p-6 rounded-xl shadow-lg"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                                <HiCalendar className="text-2xl text-[#96BE54]" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500">Tipos Únicos</p>
+                                <p className="text-2xl font-bold text-[#47624F]">{stats.tiposUnicos}</p>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="bg-white p-6 rounded-xl shadow-lg"
+                    >
+                        <div className="flex items-center gap-4">
+                            <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                                <HiChartBar className="text-2xl text-[#96BE54]" />
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500">Total Registros</p>
+                                <p className="text-2xl font-bold text-[#47624F]">{stats.produccionMensual}</p>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
 
@@ -197,11 +239,10 @@ const ProduccionAnimal = () => {
                         <thead>
                             <tr className="bg-[#96BE54] text-white">
                                 <th className="py-3 px-6 rounded-tl-xl">Animal</th>
-                                <th className="py-3 px-6">ID</th>
-                                <th className="py-3 px-6">Producción</th>
-                                <th className="py-3 px-6">Cantidad</th>
-                                <th className="py-3 px-6">Calidad</th>
+                                <th className="py-3 px-6">Tipo Producción</th>
+                                <th className="py-3 px-6">Cantidad Diaria</th>
                                 <th className="py-3 px-6">Costo</th>
+                                <th className="py-3 px-6">Producción Secundaria</th>
                                 <th className="py-3 px-6 rounded-tr-xl">Acciones</th>
                             </tr>
                         </thead>
@@ -213,20 +254,10 @@ const ProduccionAnimal = () => {
                                     whileHover={{ backgroundColor: "#F9FFEF" }}
                                 >
                                     <td className="py-4 px-6">{item.tipoAnimal}</td>
-                                    <td className="py-4 px-6">{item.identificacion}</td>
                                     <td className="py-4 px-6">{item.tipoProduccion}</td>
-                                    <td className="py-4 px-6">
-                                        {item.cantidadDiaria} {item.unidad}
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <span className={`px-3 py-1 rounded-full text-sm ${item.calidad === 'Premium'
-                                                ? 'bg-purple-100 text-purple-800'
-                                                : 'bg-blue-100 text-blue-800'
-                                            }`}>
-                                            {item.calidad}
-                                        </span>
-                                    </td>
-                                    <td className="py-4 px-6">₡{item.costoProducto}</td>
+                                    <td className="py-4 px-6">{item.cantidadDiaria}</td>
+                                    <td className="py-4 px-6">₡{item.costoProducto.toLocaleString()}</td>
+                                    <td className="py-4 px-6">{item.tipoProduccionSec}</td>
                                     <td className="py-4 px-6">
                                         <div className="flex items-center gap-2">
                                             <button
@@ -255,6 +286,7 @@ const ProduccionAnimal = () => {
                     fields={formFields}
                     onSubmit={handleSubmit}
                     onClose={handleCloseForm}
+                    title={`${currentAction === 'create' ? 'Nuevo' : 'Editar'} Registro de Producción`}
                     action={currentAction}
                     selectedItem={selectedItem}
                 />
