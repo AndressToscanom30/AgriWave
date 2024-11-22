@@ -2,11 +2,13 @@ import { motion } from 'framer-motion';
 import { HiOutlineCash } from 'react-icons/hi';
 import { useState } from 'react';
 import FormsDinamicos from './FormsDinamicos';
+import axios from 'axios';
+
 
 const FinancieraPage = () => {
   const [activeForm, setActiveForm] = useState(null);
 
-  const froms = {
+  const forms = {
     "VACUNAS ANIMALES": [
       { label: "Nombre", name: "nombre", type: "text", icon: "fa-syringe" },
       { label: "Fecha Vacunación", name: "fechaVacunacion", type: "date", icon: "fa-calendar" },
@@ -94,13 +96,35 @@ const FinancieraPage = () => {
     }
   ];
 
-  /**
-   *   const handleSubmit = (formData) => {
-    console.log('Form submitted:', formData);
-    setActiveForm(null);
-    };
-   * 
-   */
+  const handleSubmit = async (formData) => {
+    try {
+      let apiUrl = '';
+      switch (activeForm) {
+        case 'VACUNAS ANIMALES':
+          apiUrl = 'http://localhost:8080/vacunas';
+          break;
+        case 'GESTION ALIMENTACION':
+          apiUrl = 'http://localhost:8080/alimentacion';
+          break;
+        case 'GESTION ANIMAL':
+          apiUrl = 'http://localhost:8080/animales';
+          break;
+        case 'PRODUCCION ANIMAL':
+          apiUrl = 'http://localhost:8080/produccion';
+          break;
+        case 'GESTION DE TERRENO':
+          apiUrl = 'http://localhost:8080/terrenos';
+          break;
+      }
+
+      const response = await axios.post(apiUrl, formData);
+      console.log('Data saved successfully:', response.data);
+      setActiveForm(null);
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
 
   return (
     <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
@@ -173,13 +197,15 @@ const FinancieraPage = () => {
         ))}
       </motion.div>
 
-      <FormsDinamicos
-        isOpen={!!activeForm}
-        onClose={() => setActiveForm(null)}
-        title={activeForm || ''}
-        fields={froms[activeForm] || []}
-      //onSubmit={handleSubmit}
-      />
+      {activeForm && (
+        <FormsDinamicos
+          fields={forms[activeForm] || []}
+          onSubmit={handleSubmit}
+          onClose={() => setActiveForm(null)}
+          action="create"
+          selectedItem={null}
+        />
+      )}
     </div>
   );
 };
