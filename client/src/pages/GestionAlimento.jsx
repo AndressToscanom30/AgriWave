@@ -253,7 +253,7 @@ const GestionAlimento = () => {
                                 <td className="px-6 py-4 whitespace-nowrap">{alimento.tipoAlimento}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">{alimento.marca}</td>
                                 <td className="px-6 py-4 whitespace-nowrap">₡{alimento.precio.toLocaleString()}</td>
-                                <td className="px-6 py-4 whitespace-nowrap">{alimento.cantidad} {alimento.unidad}</td>
+                                <td className="px-6 py-4 whitespace-nowrap">{alimento.cantidad}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
                                     <div className="relative">
                                         <motion.button
