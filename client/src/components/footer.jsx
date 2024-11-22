@@ -1,8 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
 
 const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [subscriptionEmail, setSubscriptionEmail] = useState("");
+
+  const SERVICE_ID = "service_6fe0c5u";
 
   const socialLinks = [
     { icon: "facebook-f", url: "https://facebook.com", color: "#1877F2" },
@@ -16,6 +20,29 @@ const Footer = () => {
     { id: 'equino', label: 'Equino' },
     { id: 'avicultor', label: 'Avicultor' },
   ];
+
+  const handleSubscription = async (e) => {
+    e.preventDefault();
+    
+    const templateParams = {
+      to_email: subscriptionEmail,
+      message: "¡Gracias por suscribirte a Agriwave! Recibirás todas nuestras actualizaciones y novedades sobre gestión ganadera."
+    };
+
+    try {
+      const response = await emailjs.send(
+        SERVICE_ID, 
+        templateParams
+      );
+      
+      if (response.status === 200) {
+        alert("¡Gracias por suscribirte! Te hemos enviado un correo de confirmación.");
+        setSubscriptionEmail("");
+      }
+    } catch (error) {
+      alert("Hubo un error al procesar tu suscripción. Por favor intenta nuevamente.");
+    }
+  };
 
   return (
     <footer className="relative bg-gradient-to-b from-[#F1F7E7] to-white">
@@ -64,20 +91,24 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-700">Mantente conectado</h3>
             <p className="text-gray-600">Suscríbete para recibir las últimas actualizaciones</p>
-            <div className="flex">
+            <form onSubmit={handleSubscription} className="flex">
               <input
                 type="email"
+                value={subscriptionEmail}
+                onChange={(e) => setSubscriptionEmail(e.target.value)}
                 placeholder="Tu correo electrónico"
+                required
                 className="flex-1 px-4 py-2 rounded-l-lg border-2 border-r-0 border-[#6DAD58] focus:outline-none focus:ring-2 focus:ring-[#6DAD58]/50"
               />
               <motion.button
+                type="submit"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="px-6 py-2 bg-[#6DAD58] text-white rounded-r-lg hover:bg-[#5c9b4a] transition-colors"
               >
                 Suscribirse
               </motion.button>
-            </div>
+            </form>
           </div>
         </div>
 
