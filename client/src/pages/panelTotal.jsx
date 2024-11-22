@@ -7,6 +7,7 @@ import ProduccionAnimalPage from './ProduccionAnimal';
 import GestionAlimentacionPage from './GestionAlimento';
 import GestionAnimal from './GestionAnimal';
 import GestionTerreno from './GestionTerreno';
+import Reportes from './Reportes';
 
 const MenuItem = ({ icon, title, isActive, onClick }) => (
     <motion.button
@@ -234,6 +235,7 @@ const PanelTotal = () => {
                                                     whileHover={{ scale: 1.05 }}
                                                     whileTap={{ scale: 0.95 }}
                                                     className="bg-[#F9FFEF] p-3 rounded-xl hover:bg-[#E6E9D9] transition-colors text-center"
+                                                    onClick={() => setCurrentView('reportes')}
                                                 >
                                                     <span className="block text-xl mb-1">📊</span>
                                                     <span className="text-xs text-[#3F523B]">Reportes</span>
@@ -271,8 +273,10 @@ const PanelTotal = () => {
                         {currentView === 'animal' && <GestionAnimal />}
                         {currentView === 'produccion' && <ProduccionAnimalPage />}
                         {currentView === 'terreno' && <GestionTerreno />}
+                        {currentView === 'reportes' && <Reportes />} 
                     </motion.div>
                 </AnimatePresence>
+
             </div>
         </div>
     );

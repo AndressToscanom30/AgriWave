@@ -13,8 +13,22 @@ const GestionAlimento = () => {
     const [alimentos, setAlimentos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        tipoAlimento: '',
+        marca: '',
+        precioMin: '',
+        precioMax: '',
+    });
 
     const API_URL = 'http://localhost:8080/alimentos';
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     useEffect(() => {
         fetchAlimentos();
@@ -35,6 +49,17 @@ const GestionAlimento = () => {
 
     const handleSubmit = async (data) => {
         try {
+
+            if (!data.tipoAlimento || !data.marca || !data.precio || !data.cantidad) {
+                alert('Todos los campos son obligatorios');
+                return;
+            }
+
+            if (data.precio <= 0 || data.cantidad <= 0) {
+                alert('El precio y la cantidad deben ser mayores a 0');
+                return;
+            }
+
             const formattedData = {
                 tipoAlimento: data.tipoAlimento,
                 marca: data.marca,
@@ -86,11 +111,29 @@ const GestionAlimento = () => {
     };
 
     const formFields = [
-        { label: "Tipo Alimento", name: "tipoAlimento", type: "text", icon: "fa-wheat" },
-        { label: "Marca", name: "marca", type: "text", icon: "fa-tag" },
-        { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
-        { label: "Cantidad", name: "cantidad", type: "number", icon: "fa-weight" }
+        { label: "Tipo Alimento", name: "tipoAlimento", type: "text", icon: "fa-wheat", required: true },
+        { label: "Marca", name: "marca", type: "text", icon: "fa-tag", required: true },
+        { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign", required: true },
+        { label: "Cantidad", name: "cantidad", type: "number", icon: "fa-weight", required: true }
     ];
+
+    const filteredAlimentos = alimentos.filter((alimento) => {
+        const matchesSearch = Object.values(alimento)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+        const matchesTipo = !filters.tipoAlimento ||
+            alimento.tipoAlimento.toLowerCase().includes(filters.tipoAlimento.toLowerCase());
+
+        const matchesMarca = !filters.marca ||
+            alimento.marca.toLowerCase().includes(filters.marca.toLowerCase());
+
+        const matchesPrecio = (!filters.precioMin || alimento.precio >= parseFloat(filters.precioMin)) &&
+            (!filters.precioMax || alimento.precio <= parseFloat(filters.precioMax));
+
+        return matchesSearch && matchesTipo && matchesMarca && matchesPrecio;
+    });
 
     if (isLoading) {
         return (
@@ -109,13 +152,6 @@ const GestionAlimento = () => {
             </div>
         );
     }
-
-    const filteredAlimentos = alimentos.filter((alimento) =>
-        Object.values(alimento)
-            .join(' ')
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-    );
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
@@ -230,6 +266,83 @@ const GestionAlimento = () => {
                         Filtros
                     </motion.button>
                 </div>
+
+                {filterOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-4 p-4 bg-white rounded-xl shadow-md"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tipo de Alimento
+                                </label>
+                                <input
+                                    type="text"
+                                    name="tipoAlimento"
+                                    value={filters.tipoAlimento}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por tipo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Marca
+                                </label>
+                                <input
+                                    type="text"
+                                    name="marca"
+                                    value={filters.marca}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por marca..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Precio Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="precioMin"
+                                    value={filters.precioMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Precio mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Precio Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="precioMax"
+                                    value={filters.precioMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Precio máximo..."
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={() => setFilters({
+                                    tipoAlimento: '',
+                                    marca: '',
+                                    precioMin: '',
+                                    precioMax: '',
+                                })}
+                                className="px-4 py-2 text-sm text-[#96BE54] hover:text-[#769F4A]"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
 
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto text-left">

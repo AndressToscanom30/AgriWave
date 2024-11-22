@@ -13,8 +13,25 @@ const GestionTerreno = () => {
     const [terrenos, setTerrenos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        tipo: '',
+        ubicacion: '',
+        hectareasMin: '',
+        hectareasMax: '',
+        costoMin: '',
+        costoMax: ''
+    });
 
     const API_URL = 'http://localhost:8080/terrenos';
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
 
     const formFields = [
         { label: "Tipo", name: "tipo", type: "text", icon: "fa-map" },
@@ -49,14 +66,30 @@ const GestionTerreno = () => {
 
     const handleSubmit = async (data) => {
         try {
+            if (!data.tipo || !data.hectareas || !data.topografia || !data.ubicacion ||
+                !data.zonificacion || !data.costoTerreno) {
+                alert('Los campos Tipo, Hectáreas, Topografía, Ubicación, Zonificación y Costo del Terreno son obligatorios');
+                return;
+            }
+
+            if (parseFloat(data.hectareas) <= 0) {
+                alert('Las hectáreas deben ser mayores a 0');
+                return;
+            }
+
+            if (parseFloat(data.costoTerreno) <= 0) {
+                alert('El costo del terreno debe ser mayor a 0');
+                return;
+            }
+
             const formattedData = {
                 ...data,
                 hectareas: parseFloat(data.hectareas),
                 costoTerreno: parseFloat(data.costoTerreno),
-                costoMantenimiento: parseFloat(data.costoMantenimiento),
-                costoConstrucciones: parseFloat(data.costoConstrucciones),
-                costoArriendo: parseFloat(data.costoArriendo),
-                adicionales: parseFloat(data.adicionales)
+                costoMantenimiento: parseFloat(data.costoMantenimiento) || 0,
+                costoConstrucciones: parseFloat(data.costoConstrucciones) || 0,
+                costoArriendo: parseFloat(data.costoArriendo) || 0,
+                adicionales: parseFloat(data.adicionales) || 0
             };
 
             if (currentAction === 'create') {
@@ -71,9 +104,31 @@ const GestionTerreno = () => {
             await fetchTerrenos();
             handleCloseForm();
         } catch (err) {
-            console.error('Error al procesar la operación:', err);
+            console.error('Error:', err);
+            alert('Error al guardar los datos');
         }
     };
+
+    const filteredTerrenos = terrenos.filter((terreno) => {
+        const matchesSearch = Object.values(terreno)
+            .join(' ')
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+        const matchesTipo = !filters.tipo ||
+            terreno.tipo.toLowerCase().includes(filters.tipo.toLowerCase());
+
+        const matchesUbicacion = !filters.ubicacion ||
+            terreno.ubicacion.toLowerCase().includes(filters.ubicacion.toLowerCase());
+
+        const matchesHectareas = (!filters.hectareasMin || terreno.hectareas >= parseFloat(filters.hectareasMin)) &&
+            (!filters.hectareasMax || terreno.hectareas <= parseFloat(filters.hectareasMax));
+
+        const matchesCosto = (!filters.costoMin || terreno.costoTerreno >= parseFloat(filters.costoMin)) &&
+            (!filters.costoMax || terreno.costoTerreno <= parseFloat(filters.costoMax));
+
+        return matchesSearch && matchesTipo && matchesUbicacion && matchesHectareas && matchesCosto;
+    });
 
     const stats = {
         totalHectareas: terrenos.reduce((acc, curr) => acc + (parseFloat(curr.hectareas) || 0), 0),
@@ -221,7 +276,110 @@ const GestionTerreno = () => {
                         Filtros
                     </motion.button>
                 </div>
-
+                {filterOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-4 p-4 bg-white rounded-xl shadow-md"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tipo de Terreno
+                                </label>
+                                <input
+                                    type="text"
+                                    name="tipo"
+                                    value={filters.tipo}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por tipo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Ubicación
+                                </label>
+                                <input
+                                    type="text"
+                                    name="ubicacion"
+                                    value={filters.ubicacion}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por ubicación..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Hectáreas Mínimas
+                                </label>
+                                <input
+                                    type="number"
+                                    name="hectareasMin"
+                                    value={filters.hectareasMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Hectáreas mínimas..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Hectáreas Máximas
+                                </label>
+                                <input
+                                    type="number"
+                                    name="hectareasMax"
+                                    value={filters.hectareasMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Hectáreas máximas..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMin"
+                                    value={filters.costoMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Costo Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="costoMax"
+                                    value={filters.costoMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Costo máximo..."
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={() => setFilters({
+                                    tipo: '',
+                                    ubicacion: '',
+                                    hectareasMin: '',
+                                    hectareasMax: '',
+                                    costoMin: '',
+                                    costoMax: ''
+                                })}
+                                className="px-4 py-2 text-sm text-[#96BE54] hover:text-[#769F4A]"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto">
                         <thead>
@@ -241,48 +399,41 @@ const GestionTerreno = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {terrenos
-                                .filter(item =>
-                                    Object.values(item)
-                                        .join(' ')
-                                        .toLowerCase()
-                                        .includes(searchTerm.toLowerCase())
-                                )
-                                .map((item) => (
-                                    <motion.tr
-                                        key={item.id}
-                                        className="border-b hover:bg-gray-50"
-                                        whileHover={{ backgroundColor: "#F9FFEF" }}
-                                    >
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.tipo}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.hectareas} ha</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.topografia}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.condicionesAmb}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.ubicacion}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">{item.zonificacion}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoTerreno.toLocaleString()}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoMantenimiento.toLocaleString()}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoConstrucciones.toLocaleString()}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoArriendo.toLocaleString()}</td>
-                                        <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.adicionales.toLocaleString()}</td>
-                                        <td className="py-4 px-6">
-                                            <div className="flex items-center justify-center gap-2">
-                                                <button
-                                                    onClick={() => handleAction('edit', item)}
-                                                    className="p-2 hover:bg-[#96BE54]/10 rounded-lg transition-all"
-                                                >
-                                                    <HiPencil className="text-[#96BE54]" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(item.id)}
-                                                    className="p-2 hover:bg-red-50 rounded-lg transition-all"
-                                                >
-                                                    <HiTrash className="text-red-500" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </motion.tr>
-                                ))}
+                            {filteredTerrenos.map((item) => (
+                                <motion.tr
+                                    key={item.id}
+                                    className="border-b hover:bg-gray-50"
+                                    whileHover={{ backgroundColor: "#F9FFEF" }}
+                                >
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.tipo}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.hectareas} ha</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.topografia}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.condicionesAmb}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.ubicacion}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">{item.zonificacion}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoTerreno.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoMantenimiento.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoConstrucciones.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.costoArriendo.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left whitespace-nowrap">₡{item.adicionales.toLocaleString()}</td>
+                                    <td className="py-4 px-6">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <button
+                                                onClick={() => handleAction('edit', item)}
+                                                className="p-2 hover:bg-[#96BE54]/10 rounded-lg transition-all"
+                                            >
+                                                <HiPencil className="text-[#96BE54]" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(item.id)}
+                                                className="p-2 hover:bg-red-50 rounded-lg transition-all"
+                                            >
+                                                <HiTrash className="text-red-500" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </motion.tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

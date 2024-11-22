@@ -13,6 +13,13 @@ const VacunasAnimalesPage = () => {
     const [vacunas, setVacunas] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filters, setFilters] = useState({
+        nombre: '',
+        fechaDesde: '',
+        fechaHasta: '',
+        precioMin: '',
+        precioMax: ''
+    });
 
     const API_URL = 'http://localhost:8080/vacunas';
 
@@ -35,15 +42,41 @@ const VacunasAnimalesPage = () => {
 
     const handleSubmit = async (data) => {
         try {
-            if (currentAction === 'create') {
-                await axios.post(API_URL, data);
-            } else if (currentAction === 'edit' && selectedItem) {
-                await axios.put(`${API_URL}/${selectedItem.id}`, data);
+            if (!data.nombre || !data.fechaVacunacion || !data.precio || !data.proximaVacunacion) {
+                alert('Todos los campos son obligatorios');
+                return;
             }
+
+            const fechaVacunacion = new Date(data.fechaVacunacion);
+            const proximaVacunacion = new Date(data.proximaVacunacion);
+            const hoy = new Date();
+
+            if (fechaVacunacion > proximaVacunacion) {
+                alert('La fecha de próxima vacunación debe ser posterior a la fecha de vacunación');
+                return;
+            }
+
+            if (parseFloat(data.precio) <= 0) {
+                alert('El precio debe ser mayor a 0');
+                return;
+            }
+
+            const formattedData = {
+                ...data,
+                precio: parseFloat(data.precio)
+            };
+
+            if (currentAction === 'create') {
+                await axios.post(API_URL, formattedData);
+            } else if (currentAction === 'edit' && selectedItem) {
+                await axios.put(`${API_URL}/${selectedItem.id}`, formattedData);
+            }
+
             await fetchVacunas();
             handleCloseForm();
         } catch (err) {
-            console.error('Error al procesar la operación:', err);
+            console.error('Error:', err);
+            alert('Error al guardar los datos');
         }
     };
 
@@ -68,6 +101,14 @@ const VacunasAnimalesPage = () => {
         setIsFormOpen(true);
     };
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     const stats = {
         totalVacunas: vacunas.length,
         totalGasto: vacunas.reduce((acc, curr) => acc + parseFloat(curr.precio || 0), 0),
@@ -84,11 +125,12 @@ const VacunasAnimalesPage = () => {
     };
 
     const formFields = [
-        { label: "Nombre", name: "nombre", type: "text", icon: "fa-syringe" },
-        { label: "Fecha Vacunación", name: "fechaVacunacion", type: "date", icon: "fa-calendar" },
-        { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign" },
-        { label: "Próxima Vacunación", name: "proximaVacunacion", type: "date", icon: "fa-calendar-plus" }
+        { label: "Nombre", name: "nombre", type: "text", icon: "fa-syringe", required: true },
+        { label: "Fecha Vacunación", name: "fechaVacunacion", type: "date", icon: "fa-calendar", required: true },
+        { label: "Precio", name: "precio", type: "number", icon: "fa-dollar-sign", required: true },
+        { label: "Próxima Vacunación", name: "proximaVacunacion", type: "date", icon: "fa-calendar-plus", required: true }
     ];
+
 
     if (isLoading) {
         return (
@@ -108,12 +150,24 @@ const VacunasAnimalesPage = () => {
         );
     }
 
-    const filteredVacunas = vacunas.filter((vacuna) =>
-        Object.values(vacuna)
+    const filteredVacunas = vacunas.filter((vacuna) => {
+        const matchesSearch = Object.values(vacuna)
             .join(' ')
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())
-    );
+            .includes(searchTerm.toLowerCase());
+
+        const matchesNombre = !filters.nombre ||
+            vacuna.nombre.toLowerCase().includes(filters.nombre.toLowerCase());
+
+        const matchesFechas = (!filters.fechaDesde || new Date(vacuna.fechaVacunacion) >= new Date(filters.fechaDesde)) &&
+            (!filters.fechaHasta || new Date(vacuna.fechaVacunacion) <= new Date(filters.fechaHasta));
+
+        const matchesPrecio = (!filters.precioMin || vacuna.precio >= parseFloat(filters.precioMin)) &&
+            (!filters.precioMax || vacuna.precio <= parseFloat(filters.precioMax));
+
+        return matchesSearch && matchesNombre && matchesFechas && matchesPrecio;
+    });
+
 
     return (
         <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
@@ -228,7 +282,94 @@ const VacunasAnimalesPage = () => {
                         Filtros
                     </motion.button>
                 </div>
-
+                {filterOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="mt-4 p-4 bg-white rounded-xl shadow-md"
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Nombre de Vacuna
+                                </label>
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value={filters.nombre}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Filtrar por nombre..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Fecha Desde
+                                </label>
+                                <input
+                                    type="date"
+                                    name="fechaDesde"
+                                    value={filters.fechaDesde}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Fecha Hasta
+                                </label>
+                                <input
+                                    type="date"
+                                    name="fechaHasta"
+                                    value={filters.fechaHasta}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Precio Mínimo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="precioMin"
+                                    value={filters.precioMin}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Precio mínimo..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Precio Máximo
+                                </label>
+                                <input
+                                    type="number"
+                                    name="precioMax"
+                                    value={filters.precioMax}
+                                    onChange={handleFilterChange}
+                                    className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:border-[#96BE54]"
+                                    placeholder="Precio máximo..."
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                onClick={() => setFilters({
+                                    nombre: '',
+                                    fechaDesde: '',
+                                    fechaHasta: '',
+                                    precioMin: '',
+                                    precioMax: ''
+                                })}
+                                className="px-4 py-2 text-sm text-[#96BE54] hover:text-[#769F4A]"
+                            >
+                                Limpiar Filtros
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto text-left">
                         <thead>
