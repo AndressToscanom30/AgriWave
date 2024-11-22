@@ -95,21 +95,24 @@ const FinancieraPage = () => {
 
   const calculateStats = () => {
     const totalGastos = {
-      vacunas: data.vacunas.reduce((acc, curr) => acc + (curr.precio || 0), 0),
-      alimentacion: data.alimentacion.reduce((acc, curr) => acc + (curr.precio || 0), 0),
-      animales: data.animales.reduce((acc, curr) => acc + (curr.costoAnimal || 0), 0),
-      terrenos: data.terrenos.reduce((acc, curr) => acc + (curr.costoTerreno || 0), 0)
+      vacunas: data.vacunas.reduce((acc, curr) => acc + (parseFloat(curr.precio) || 0), 0),
+      alimentacion: data.alimentacion.reduce((acc, curr) => acc + (parseFloat(curr.precio) * parseFloat(curr.cantidad) || 0), 0),
+
+      animales: data.animales.reduce((acc, curr) => acc + (parseFloat(curr.costoAnimal) || 0), 0),
+      terrenos: data.terrenos.reduce((acc, curr) => acc + (parseFloat(curr.costoTerreno) || 0), 0)
     };
 
-    const totalIngresos = data.produccion.reduce((acc, curr) => acc + (curr.costoProducto || 0), 0);
+    const totalIngresos = data.produccion.reduce((acc, curr) =>
+      acc + ((parseFloat(curr.cantidadDiariaProduccion) || 0) * (parseFloat(curr.costoProducto) || 0)), 0
+    );
 
     return {
       totalGastos: Object.values(totalGastos).reduce((a, b) => a + b, 0),
       totalIngresos,
-      balance: totalIngresos - Object.values(totalGastos).reduce((a, b) => a + b, 0),
-      desglose: totalGastos
+      balance: totalIngresos - Object.values(totalGastos).reduce((a, b) => a + b, 0)
     };
   };
+
 
   const cards = [
     {
@@ -177,11 +180,33 @@ const FinancieraPage = () => {
       const endpoint = endpoints[activeForm];
       if (!endpoint) return;
 
+      const requiredFields = forms[activeForm].filter(field => !field.optional);
+      const emptyFields = requiredFields.filter(field =>
+        !formData[field.name] ||
+        (typeof formData[field.name] === 'string' && formData[field.name].trim() === '')
+      );
+
+      if (emptyFields.length > 0) {
+        alert(`Por favor complete los siguientes campos obligatorios: ${emptyFields.map(f => f.label).join(', ')}`);
+        return;
+      }
+
+      const numericFields = forms[activeForm].filter(field => field.type === 'number');
+      const invalidNumbers = numericFields.filter(field =>
+        formData[field.name] && isNaN(parseFloat(formData[field.name]))
+      );
+
+      if (invalidNumbers.length > 0) {
+        alert(`Los siguientes campos deben ser números válidos: ${invalidNumbers.map(f => f.label).join(', ')}`);
+        return;
+      }
+
       await axios.post(`http://localhost:8080/${endpoint}`, formData);
       await fetchAllData();
       setActiveForm(null);
     } catch (error) {
       console.error('Error al guardar:', error);
+      alert('Error al guardar el registro. Por favor intente nuevamente.');
     }
   };
 
