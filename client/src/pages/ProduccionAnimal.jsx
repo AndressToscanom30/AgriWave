@@ -233,17 +233,16 @@ const ProduccionAnimal = () => {
                         Filtros
                     </motion.button>
                 </div>
-
                 <div className="mt-8 overflow-x-auto">
                     <table className="min-w-full table-auto">
                         <thead>
                             <tr className="bg-[#96BE54] text-white">
-                                <th className="py-3 px-6 rounded-tl-xl">Animal</th>
-                                <th className="py-3 px-6">Tipo Producción</th>
-                                <th className="py-3 px-6">Cantidad Diaria</th>
-                                <th className="py-3 px-6">Costo</th>
-                                <th className="py-3 px-6">Producción Secundaria</th>
-                                <th className="py-3 px-6 rounded-tr-xl">Acciones</th>
+                                <th className="py-3 px-6 rounded-tl-xl text-left">Animal</th>
+                                <th className="py-3 px-6 text-left">Tipo Producción</th>
+                                <th className="py-3 px-6 text-left">Cantidad Diaria</th>
+                                <th className="py-3 px-6 text-left">Costo</th>
+                                <th className="py-3 px-6 text-left">Producción Secundaria</th>
+                                <th className="py-3 px-6 rounded-tr-xl text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -253,13 +252,13 @@ const ProduccionAnimal = () => {
                                     className="border-b hover:bg-gray-50"
                                     whileHover={{ backgroundColor: "#F9FFEF" }}
                                 >
-                                    <td className="py-4 px-6">{item.tipoAnimal}</td>
-                                    <td className="py-4 px-6">{item.tipoProduccion}</td>
-                                    <td className="py-4 px-6">{item.cantidadDiaria}</td>
-                                    <td className="py-4 px-6">₡{item.costoProducto.toLocaleString()}</td>
-                                    <td className="py-4 px-6">{item.tipoProduccionSec}</td>
+                                    <td className="py-4 px-6 text-left">{item.tipoAnimal}</td>
+                                    <td className="py-4 px-6 text-left">{item.tipoProduccion}</td>
+                                    <td className="py-4 px-6 text-left">{item.cantidadDiaria}</td>
+                                    <td className="py-4 px-6 text-left">₡{item.costoProducto.toLocaleString()}</td>
+                                    <td className="py-4 px-6 text-left">{item.tipoProduccionSec}</td>
                                     <td className="py-4 px-6">
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center justify-center gap-2">
                                             <button
                                                 onClick={() => handleAction('edit', item)}
                                                 className="p-2 hover:bg-[#96BE54]/10 rounded-lg transition-all"
@@ -279,6 +278,7 @@ const ProduccionAnimal = () => {
                         </tbody>
                     </table>
                 </div>
+
             </motion.div>
 
             {isFormOpen && (
