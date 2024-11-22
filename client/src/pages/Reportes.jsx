@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
-
-
 import {
     HiChartBar,
     HiCurrencyDollar,
@@ -30,7 +28,6 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts';
-
 
 const Reportes = () => {
     const [dateRange, setDateRange] = useState('month');
@@ -77,7 +74,6 @@ const Reportes = () => {
         }
     };
 
-
     const formatDate = (dateString) => {
         if (!dateString) return new Date().toLocaleDateString();
         const date = new Date(dateString);
@@ -87,125 +83,6 @@ const Reportes = () => {
     };
 
     const handleExport = () => {
-        const styles = {
-            headerTitle: {
-                font: {
-                    bold: true,
-                    color: { rgb: "FFFFFF" },
-                    sz: 14,
-                    name: 'Arial'
-                },
-                fill: {
-                    fgColor: { rgb: "96BE54" }
-                },
-                alignment: {
-                    horizontal: "center",
-                    vertical: "center"
-                },
-                border: {
-                    top: { style: "medium", color: { rgb: "000000" } },
-                    bottom: { style: "medium", color: { rgb: "000000" } },
-                    left: { style: "medium", color: { rgb: "000000" } },
-                    right: { style: "medium", color: { rgb: "000000" } }
-                }
-            },
-            subHeader: {
-                font: {
-                    bold: true,
-                    color: { rgb: "47624F" },
-                    sz: 12,
-                    name: 'Arial'
-                },
-                fill: {
-                    fgColor: { rgb: "E6EFD9" }
-                },
-                alignment: {
-                    horizontal: "center",
-                    vertical: "center"
-                },
-                border: {
-                    bottom: { style: "thin", color: { rgb: "96BE54" } }
-                }
-            },
-            cell: {
-                font: {
-                    color: { rgb: "000000" },
-                    name: 'Arial'
-                },
-                alignment: {
-                    horizontal: "left",
-                    vertical: "center"
-                },
-                border: {
-                    bottom: { style: "thin", color: { rgb: "E6EFD9" } }
-                }
-            },
-            numberCell: {
-                font: {
-                    color: { rgb: "000000" },
-                    name: 'Arial'
-                },
-                alignment: {
-                    horizontal: "right",
-                    vertical: "center"
-                },
-                border: {
-                    bottom: { style: "thin", color: { rgb: "E6EFD9" } }
-                },
-                numFmt: "#,##0.00"
-            }
-        };
-
-        const exportData = {
-            'Dashboard General': [
-                {
-                    'Categoría': 'Terrenos',
-                    'Cantidad': stats.totalTerrenos,
-                    'Métrica Principal': `${stats.totalHectareas.toFixed(2)} hectáreas`,
-                    'Estado': '✅ Activo'
-                },
-                {
-                    'Categoría': 'Producción',
-                    'Cantidad': stats.produccionTotal.toFixed(2),
-                    'Métrica Principal': 'Unidades producidas',
-                    'Estado': '✅ En proceso'
-                },
-                {
-                    'Categoría': 'Vacunación',
-                    'Cantidad': stats.vacunasProximas,
-                    'Métrica Principal': 'Próximas vacunas',
-                    'Estado': '⚠️ Pendiente'
-                },
-                {
-                    'Categoría': 'Balance General',
-                    'Cantidad': (stats.ingresoTotal - stats.gastoTotal).toLocaleString(),
-                    'Métrica Principal': `${((stats.ingresoTotal - stats.gastoTotal) / (stats.ingresoTotal || 1) * 100).toFixed(2)}%`,
-                    'Estado': '💰 Financiero'
-                }
-            ],
-            'Registro de Terrenos': data.terrenos.map(t => ({
-                '🌳 Tipo': t.tipo,
-                '📏 Hectáreas': t.hectareas?.toFixed(2) || 0,
-                '📍 Ubicación': t.ubicacion,
-                '💵 Costo': t.costoTerreno?.toLocaleString() || 0,
-                '📅 Última Actualización': new Date().toLocaleDateString()
-            })),
-            'Control de Producción': data.produccion.map(p => ({
-                '🐄 Animal': p.tipoAnimal,
-                '🥛 Producto': p.tipoProduccion,
-                '📊 Cantidad': p.cantidadDiariaProduccion?.toFixed(2) || 0,
-                '💰 Valor': p.costoProducto?.toLocaleString() || 0,
-                '📅 Fecha': new Date(p.fecha).toLocaleDateString()
-            })),
-            'Plan de Vacunación': data.vacunas.map(v => ({
-                '💉 Vacuna': v.nombre,
-                '📅 Aplicación': new Date(v.fechaVacunacion).toLocaleDateString(),
-                '⏰ Próxima Dosis': new Date(v.proximaVacunacion).toLocaleDateString(),
-                '💵 Costo': parseFloat(v.precio)?.toLocaleString() || 0,
-                '✔️ Estado': 'Aplicada'
-            }))
-        };
-
         const wb = XLSX.utils.book_new();
         wb.Props = {
             Title: "Reporte Completo AgriWave",
@@ -214,36 +91,99 @@ const Reportes = () => {
             CreatedDate: new Date()
         };
 
-        Object.entries(exportData).forEach(([sheetName, sheetData]) => {
-            const ws = XLSX.utils.json_to_sheet(sheetData, {
-                origin: 'A2'
-            });
+        const styles = {
+            header: {
+                font: { bold: true, color: { rgb: "FFFFFF" }, sz: 16, name: "Arial" },
+                fill: { fgColor: { rgb: "96BE54" } },
+                alignment: { horizontal: "center", vertical: "center" },
+                border: {
+                    top: { style: "medium" },
+                    bottom: { style: "medium" },
+                    left: { style: "medium" },
+                    right: { style: "medium" }
+                }
+            },
+            subHeader: {
+                font: { bold: true, sz: 12, name: "Arial" },
+                fill: { fgColor: { rgb: "E6EFD9" } },
+                alignment: { horizontal: "center" },
+                border: { bottom: { style: "thin" } }
+            },
+            cell: {
+                font: { sz: 11, name: "Arial" },
+                alignment: { horizontal: "left" },
+                border: { bottom: { style: "thin", color: { rgb: "CCCCCC" } } }
+            },
+            numberCell: {
+                font: { sz: 11, name: "Arial" },
+                alignment: { horizontal: "right" },
+                numFmt: "#,##0.00",
+                border: { bottom: { style: "thin", color: { rgb: "CCCCCC" } } }
+            }
+        };
+
+        const sheets = {
+            'Resumen General': [
+                {
+                    'Categoría': 'Ingresos Totales',
+                    'Valor': stats.totalIngresos,
+                    'Porcentaje': `${((stats.totalIngresos / (stats.totalIngresos + stats.totalGastos)) * 100).toFixed(2)}%`,
+                    'Estado': '✅'
+                },
+                {
+                    'Categoría': 'Gastos Totales',
+                    'Valor': stats.totalGastos,
+                    'Porcentaje': `${((stats.totalGastos / (stats.totalIngresos + stats.totalGastos)) * 100).toFixed(2)}%`,
+                    'Estado': '⚠️'
+                },
+                {
+                    'Categoría': 'Balance Final',
+                    'Valor': stats.balance,
+                    'Porcentaje': `${((stats.balance / stats.totalIngresos) * 100).toFixed(2)}%`,
+                    'Estado': stats.balance > 0 ? '💰' : '❌'
+                }
+            ],
+            'Producción': data.produccion.map(p => ({
+                'Tipo': p.tipoProduccion,
+                'Cantidad': p.cantidadDiariaProduccion,
+                'Valor Unitario': p.costoProducto,
+                'Total': p.cantidadDiariaProduccion * p.costoProducto,
+                'Fecha': formatDate(p.fecha)
+            })),
+            'Terrenos': data.terrenos.map(t => ({
+                'Tipo': t.tipo,
+                'Hectáreas': t.hectareas,
+                'Ubicación': t.ubicacion,
+                'Costo': t.costoTerreno,
+                'Estado': 'Activo'
+            }))
+        };
+
+        Object.entries(sheets).forEach(([sheetName, sheetData]) => {
+            const ws = XLSX.utils.json_to_sheet(sheetData);
 
             XLSX.utils.sheet_add_aoa(ws, [[
-                `🌟 ${sheetName} - AgriWave | ${new Date().toLocaleDateString()}`
+                `Reporte ${sheetName} - AgriWave ${new Date().toLocaleDateString()}`
             ]], { origin: 'A1' });
 
-            ws['!cols'] = Object.keys(sheetData[0] || {}).map(() => ({ width: 25 }));
+            ws['!cols'] = Array(Object.keys(sheetData[0]).length).fill({ width: 20 });
 
-            ws['!rows'] = [{ hpt: 40 }];
             Object.keys(ws).forEach(cell => {
                 if (cell[0] === '!') return;
 
-                if (cell === 'A1') {
-                    ws[cell].s = styles.headerTitle;
-                } else if (cell.includes('1')) {
+                if (cell.includes('1')) {
+                    ws[cell].s = styles.header;
+                } else if (cell.includes('2')) {
                     ws[cell].s = styles.subHeader;
                 } else {
-                    ws[cell].s = cell.includes('Cantidad') || cell.includes('Costo') || cell.includes('Valor')
-                        ? styles.numberCell
-                        : styles.cell;
+                    ws[cell].s = cell.match(/[CD]\d+/) ? styles.numberCell : styles.cell;
                 }
             });
 
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
         });
 
-        XLSX.writeFile(wb, `📊_Reporte_AgriWave_${new Date().toLocaleDateString()}.xlsx`);
+        XLSX.writeFile(wb, `AgriWave_Reporte_${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`);
     };
 
     const calculateStats = () => {
@@ -266,17 +206,6 @@ const Reportes = () => {
     };
 
     const stats = calculateStats();
-
-    const getMarginText = (ingresos, gastos) => {
-        const totalGastos = Math.abs(gastos);
-        const totalIngresos = Math.abs(ingresos);
-        const total = totalGastos + totalIngresos;
-
-        if (total === 0) return "0% margen";
-
-        const margin = ((gastos) / total * 100).toFixed(2);
-        return `${margin}% margen`;
-    };
 
     const COLORS = ['#96BE54', '#47624F', '#769F4A', '#A8D65C'];
 
@@ -327,6 +256,7 @@ const Reportes = () => {
                     </div>
                 </div>
             </motion.div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <StatsCard
                     title="Total Gastos"
