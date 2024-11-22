@@ -56,16 +56,18 @@ const Reportes = () => {
     const fetchData = async () => {
         try {
             setIsLoading(true);
-            const [terrenosData, produccionData, vacunasData] = await Promise.all([
+            const [terrenosData, produccionData, vacunasData, alimentacionData] = await Promise.all([
                 axios.get('http://localhost:8080/terrenos'),
                 axios.get('http://localhost:8080/produccion-animal'),
-                axios.get('http://localhost:8080/vacunas')
+                axios.get('http://localhost:8080/vacunas'),
+                axios.get('http://localhost:8080/alimentos')
             ]);
 
             setData({
                 terrenos: terrenosData.data,
                 produccion: produccionData.data,
                 vacunas: vacunasData.data,
+                alimentacion: alimentacionData.data,
                 finanzas: []
             });
         } catch (error) {
@@ -75,47 +77,205 @@ const Reportes = () => {
         }
     };
 
+
+    const formatDate = (dateString) => {
+        if (!dateString) return new Date().toLocaleDateString();
+        const date = new Date(dateString);
+        return date instanceof Date && !isNaN(date)
+            ? date.toLocaleDateString()
+            : new Date().toLocaleDateString();
+    };
+
     const handleExport = () => {
+        const styles = {
+            headerTitle: {
+                font: {
+                    bold: true,
+                    color: { rgb: "FFFFFF" },
+                    sz: 14,
+                    name: 'Arial'
+                },
+                fill: {
+                    fgColor: { rgb: "96BE54" }
+                },
+                alignment: {
+                    horizontal: "center",
+                    vertical: "center"
+                },
+                border: {
+                    top: { style: "medium", color: { rgb: "000000" } },
+                    bottom: { style: "medium", color: { rgb: "000000" } },
+                    left: { style: "medium", color: { rgb: "000000" } },
+                    right: { style: "medium", color: { rgb: "000000" } }
+                }
+            },
+            subHeader: {
+                font: {
+                    bold: true,
+                    color: { rgb: "47624F" },
+                    sz: 12,
+                    name: 'Arial'
+                },
+                fill: {
+                    fgColor: { rgb: "E6EFD9" }
+                },
+                alignment: {
+                    horizontal: "center",
+                    vertical: "center"
+                },
+                border: {
+                    bottom: { style: "thin", color: { rgb: "96BE54" } }
+                }
+            },
+            cell: {
+                font: {
+                    color: { rgb: "000000" },
+                    name: 'Arial'
+                },
+                alignment: {
+                    horizontal: "left",
+                    vertical: "center"
+                },
+                border: {
+                    bottom: { style: "thin", color: { rgb: "E6EFD9" } }
+                }
+            },
+            numberCell: {
+                font: {
+                    color: { rgb: "000000" },
+                    name: 'Arial'
+                },
+                alignment: {
+                    horizontal: "right",
+                    vertical: "center"
+                },
+                border: {
+                    bottom: { style: "thin", color: { rgb: "E6EFD9" } }
+                },
+                numFmt: "#,##0.00"
+            }
+        };
+
         const exportData = {
-            Terrenos: data.terrenos.map(t => ({
-                'Tipo': t.tipo,
-                'Hectáreas': t.hectareas,
-                'Ubicación': t.ubicacion,
-                'Costo': t.costoTerreno
+            'Dashboard General': [
+                {
+                    'Categoría': 'Terrenos',
+                    'Cantidad': stats.totalTerrenos,
+                    'Métrica Principal': `${stats.totalHectareas.toFixed(2)} hectáreas`,
+                    'Estado': '✅ Activo'
+                },
+                {
+                    'Categoría': 'Producción',
+                    'Cantidad': stats.produccionTotal.toFixed(2),
+                    'Métrica Principal': 'Unidades producidas',
+                    'Estado': '✅ En proceso'
+                },
+                {
+                    'Categoría': 'Vacunación',
+                    'Cantidad': stats.vacunasProximas,
+                    'Métrica Principal': 'Próximas vacunas',
+                    'Estado': '⚠️ Pendiente'
+                },
+                {
+                    'Categoría': 'Balance General',
+                    'Cantidad': (stats.ingresoTotal - stats.gastoTotal).toLocaleString(),
+                    'Métrica Principal': `${((stats.ingresoTotal - stats.gastoTotal) / (stats.ingresoTotal || 1) * 100).toFixed(2)}%`,
+                    'Estado': '💰 Financiero'
+                }
+            ],
+            'Registro de Terrenos': data.terrenos.map(t => ({
+                '🌳 Tipo': t.tipo,
+                '📏 Hectáreas': t.hectareas?.toFixed(2) || 0,
+                '📍 Ubicación': t.ubicacion,
+                '💵 Costo': t.costoTerreno?.toLocaleString() || 0,
+                '📅 Última Actualización': new Date().toLocaleDateString()
             })),
-
-            Producción: data.produccion.map(p => ({
-                'Tipo Animal': p.tipoAnimal,
-                'Producción': p.tipoProduccion,
-                'Cantidad Diaria': p.cantidadDiariaProduccion,
-                'Costo': p.costoProducto
+            'Control de Producción': data.produccion.map(p => ({
+                '🐄 Animal': p.tipoAnimal,
+                '🥛 Producto': p.tipoProduccion,
+                '📊 Cantidad': p.cantidadDiariaProduccion?.toFixed(2) || 0,
+                '💰 Valor': p.costoProducto?.toLocaleString() || 0,
+                '📅 Fecha': new Date(p.fecha).toLocaleDateString()
             })),
-
-            Vacunas: data.vacunas.map(v => ({
-                'Nombre': v.nombre,
-                'Fecha': v.fechaVacunacion,
-                'Próxima': v.proximaVacunacion,
-                'Precio': v.precio
+            'Plan de Vacunación': data.vacunas.map(v => ({
+                '💉 Vacuna': v.nombre,
+                '📅 Aplicación': new Date(v.fechaVacunacion).toLocaleDateString(),
+                '⏰ Próxima Dosis': new Date(v.proximaVacunacion).toLocaleDateString(),
+                '💵 Costo': parseFloat(v.precio)?.toLocaleString() || 0,
+                '✔️ Estado': 'Aplicada'
             }))
         };
 
         const wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "Reporte Completo AgriWave",
+            Subject: "Dashboard General",
+            Author: "Sistema AgriWave",
+            CreatedDate: new Date()
+        };
 
         Object.entries(exportData).forEach(([sheetName, sheetData]) => {
-            const ws = XLSX.utils.json_to_sheet(sheetData);
+            const ws = XLSX.utils.json_to_sheet(sheetData, {
+                origin: 'A2'
+            });
+
+            XLSX.utils.sheet_add_aoa(ws, [[
+                `🌟 ${sheetName} - AgriWave | ${new Date().toLocaleDateString()}`
+            ]], { origin: 'A1' });
+
+            ws['!cols'] = Object.keys(sheetData[0] || {}).map(() => ({ width: 25 }));
+
+            ws['!rows'] = [{ hpt: 40 }];
+            Object.keys(ws).forEach(cell => {
+                if (cell[0] === '!') return;
+
+                if (cell === 'A1') {
+                    ws[cell].s = styles.headerTitle;
+                } else if (cell.includes('1')) {
+                    ws[cell].s = styles.subHeader;
+                } else {
+                    ws[cell].s = cell.includes('Cantidad') || cell.includes('Costo') || cell.includes('Valor')
+                        ? styles.numberCell
+                        : styles.cell;
+                }
+            });
+
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
         });
 
-        XLSX.writeFile(wb, `Reporte_${new Date().toLocaleDateString()}.xlsx`);
+        XLSX.writeFile(wb, `📊_Reporte_AgriWave_${new Date().toLocaleDateString()}.xlsx`);
     };
 
-    const stats = {
-        totalTerrenos: data.terrenos.length,
-        totalHectareas: data.terrenos.reduce((acc, curr) => acc + curr.hectareas, 0),
-        produccionTotal: data.produccion.reduce((acc, curr) => acc + curr.cantidadDiaria, 0),
-        vacunasProximas: data.vacunas.filter(v => new Date(v.proximaVacunacion) > new Date()).length,
-        ingresoTotal: data.finanzas?.reduce((acc, curr) => acc + curr.ingreso, 0) || 0,
-        gastoTotal: data.finanzas?.reduce((acc, curr) => acc + curr.gasto, 0) || 0
+    const calculateStats = () => {
+        const totalGastos = {
+            vacunas: data.vacunas?.reduce((acc, curr) => acc + (parseFloat(curr.precio) || 0), 0) || 0,
+            alimentacion: data.alimentacion?.reduce((acc, curr) => acc + (parseFloat(curr.precio) * parseFloat(curr.cantidad) || 0), 0) || 0,
+            animales: data.animales?.reduce((acc, curr) => acc + (parseFloat(curr.costoAnimal) || 0), 0) || 0,
+            terrenos: data.terrenos?.reduce((acc, curr) => acc + (parseFloat(curr.costoTerreno) || 0), 0) || 0
+        };
+
+        const totalIngresos = data.produccion?.reduce((acc, curr) =>
+            acc + ((parseFloat(curr.cantidadDiariaProduccion) || 0) * (parseFloat(curr.costoProducto) || 0)), 0
+        ) || 0;
+
+        return {
+            totalGastos: Object.values(totalGastos).reduce((a, b) => a + b, 0),
+            totalIngresos,
+            balance: totalIngresos - Object.values(totalGastos).reduce((a, b) => a + b, 0)
+        };
+    };
+
+    const stats = calculateStats();
+
+    const getMarginText = (ingresos, gastos) => {
+        const totalGastos = Math.abs(gastos);
+        const totalIngresos = Math.abs(ingresos);
+        const total = totalGastos + totalIngresos;
+
+        if (total === 0) return "0% margen";
+
+        const margin = ((gastos) / total * 100).toFixed(2);
+        return `${margin}% margen`;
     };
 
     const COLORS = ['#96BE54', '#47624F', '#769F4A', '#A8D65C'];
@@ -164,35 +324,33 @@ const Reportes = () => {
                             <HiDownload className="text-xl" />
                             Exportar
                         </motion.button>
-
                     </div>
                 </div>
             </motion.div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <StatsCard
-                    title="Total Terrenos"
-                    value={`${stats.totalTerrenos} terrenos`}
-                    subvalue={`${stats.totalHectareas.toFixed(2)} hectáreas`}
+                    title="Total Gastos"
+                    value={`$${stats.totalGastos}`}
+                    subvalue="Gastos totales"
                     icon={<HiLocationMarker />}
                 />
                 <StatsCard
-                    title="Producción Total"
-                    value={`${stats.produccionTotal.toFixed(2)} unidades`}
-                    subvalue="Este período"
+                    title="Total Ingresos"
+                    value={`$${stats.totalIngresos}`}
+                    subvalue="Ingresos totales"
                     icon={<HiChartBar />}
                 />
                 <StatsCard
-                    title="Vacunas Próximas"
-                    value={`${stats.vacunasProximas} vacunas`}
-                    subvalue="Próximos 30 días"
-                    icon={<HiCalendar />}
+                    title="Balance"
+                    value={`$${stats.balance}`}
+                    subvalue="Balance total"
+                    icon={<HiCurrencyDollar />}
                 />
                 <StatsCard
-                    title="Balance"
-                    value={`$${(stats.ingresoTotal - stats.gastoTotal).toLocaleString()}`}
-                    subvalue={`${((stats.ingresoTotal - stats.gastoTotal) / stats.ingresoTotal * 100).toFixed(2)}% margen`}
-                    icon={<HiCurrencyDollar />}
+                    title="Margen"
+                    value={`${((stats.balance / stats.totalIngresos) * 100).toFixed(2)}%`}
+                    subvalue="Rentabilidad"
+                    icon={<HiDocumentReport />}
                 />
             </div>
 
@@ -205,7 +363,7 @@ const Reportes = () => {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="cantidadDiaria" fill="#96BE54" />
+                            <Bar dataKey="cantidadDiariaProduccion" fill="#96BE54" />
                         </BarChart>
                     </ResponsiveContainer>
                 </ChartCard>
@@ -235,11 +393,30 @@ const Reportes = () => {
 
             <div className="grid grid-cols-1 gap-6">
                 <TableCard
-                    title="Últimas Transacciones"
-                    data={data.finanzas?.slice(0, 5) || []}
+                    title="Últimos Movimientos"
+                    data={[
+                        ...data.terrenos.map(t => ({
+                            fecha: formatDate(t.fecha),
+                            concepto: `Terreno: ${t.tipo}`,
+                            ingreso: 0,
+                            gasto: t.costoTerreno
+                        })),
+                        ...data.produccion.map(p => ({
+                            fecha: formatDate(p.fecha),
+                            concepto: `Producción: ${p.tipoProduccion}`,
+                            ingreso: p.cantidadDiariaProduccion * (p.costoProducto || 0),
+                            gasto: 0
+                        })),
+                        ...data.vacunas.map(v => ({
+                            fecha: formatDate(v.fechaVacunacion),
+                            concepto: `Vacuna: ${v.nombre}`,
+                            ingreso: 0,
+                            gasto: parseFloat(v.precio)
+                        }))
+                    ].sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 5)}
                     columns={[
                         { key: 'fecha', label: 'Fecha' },
-                        { key: 'concepto', label: 'Concepto' },
+                        { key: 'concepto', label: 'Descripción' },
                         { key: 'ingreso', label: 'Ingreso' },
                         { key: 'gasto', label: 'Gasto' }
                     ]}
