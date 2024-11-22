@@ -5,8 +5,11 @@ import emailjs from '@emailjs/browser';
 const Footer = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [subscriptionEmail, setSubscriptionEmail] = useState("");
+  const SERVICE_ID = "service_ej3ip8q";
+  const TEMPLATE_ID = "template_z8o6mgj";
+  const PUBLIC_KEY = "7m1Z5u3Yozp0FzGVA";
 
-  const SERVICE_ID = "service_6fe0c5u";
+  emailjs.init(PUBLIC_KEY);
 
   const socialLinks = [
     { icon: "facebook-f", url: "https://facebook.com", color: "#1877F2" },
@@ -23,7 +26,7 @@ const Footer = () => {
 
   const handleSubscription = async (e) => {
     e.preventDefault();
-    
+
     const templateParams = {
       to_email: subscriptionEmail,
       message: "¡Gracias por suscribirte a Agriwave! Recibirás todas nuestras actualizaciones y novedades sobre gestión ganadera."
@@ -31,15 +34,18 @@ const Footer = () => {
 
     try {
       const response = await emailjs.send(
-        SERVICE_ID, 
-        templateParams
+        SERVICE_ID,
+        TEMPLATE_ID,
+        templateParams,
+        PUBLIC_KEY
       );
-      
+
       if (response.status === 200) {
         alert("¡Gracias por suscribirte! Te hemos enviado un correo de confirmación.");
         setSubscriptionEmail("");
       }
     } catch (error) {
+      console.error("Error sending email:", error);
       alert("Hubo un error al procesar tu suscripción. Por favor intenta nuevamente.");
     }
   };
