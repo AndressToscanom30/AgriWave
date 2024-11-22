@@ -11,6 +11,7 @@ import Alimentitos from "./pages/GestionAlimento";
 import Vacunitas from "./pages/VacunasAnimales";
 import Produccion from "./pages/ProduccionAnimal";
 import Animalesssssss from "./pages/GestionAnimal";
+import Terrenos from "./pages/GestionTerreno";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/produccion" element={<Produccion />}></Route>
         <Route path="/alimento" element={<Alimentitos />}></Route>
         <Route path="/animales" element={<Animalesssssss />}></Route>
+        <Route path="/terrenos" element={<Terrenos />}></Route>
       </Routes>
       <Footer />
     </BrowserRouter>
