@@ -1,12 +1,51 @@
 import { motion } from 'framer-motion';
-import { HiOutlineCash } from 'react-icons/hi';
-import { useState } from 'react';
+import { HiOutlineCash, HiChartBar, HiCurrencyDollar, HiCalendar, HiPlus, HiDotsVertical, HiTrash } from 'react-icons/hi';
+import { useState, useEffect } from 'react';
 import FormsDinamicos from './FormsDinamicos';
 import axios from 'axios';
 
-
 const FinancieraPage = () => {
   const [activeForm, setActiveForm] = useState(null);
+  const [data, setData] = useState({
+    vacunas: [],
+    alimentacion: [],
+    animales: [],
+    produccion: [],
+    terrenos: []
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  const fetchAllData = async () => {
+    try {
+      setIsLoading(true);
+      const [vacunas, alimentacion, animales, produccion, terrenos] = await Promise.all([
+        axios.get('http://localhost:8080/vacunas'),
+        axios.get('http://localhost:8080/alimentos'),
+        axios.get('http://localhost:8080/animales'),
+        axios.get('http://localhost:8080/produccion-animal'),
+        axios.get('http://localhost:8080/terrenos')
+      ]);
+
+      setData({
+        vacunas: vacunas.data,
+        alimentacion: alimentacion.data,
+        animales: animales.data,
+        produccion: produccion.data,
+        terrenos: terrenos.data
+      });
+    } catch (err) {
+      setError('Error al cargar los datos financieros');
+      console.error('Error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const forms = {
     "VACUNAS ANIMALES": [
@@ -35,9 +74,9 @@ const FinancieraPage = () => {
     "PRODUCCION ANIMAL": [
       { label: "Tipo Animal", name: "tipoAnimal", type: "text", icon: "fa-cow" },
       { label: "Tipo Producción", name: "tipoProduccion", type: "text", icon: "fa-industry" },
-      { label: "Cantidad Diaria Producción", name: "cantidadDiariaProduccion", type: "number", icon: "fa-chart-line" },
+      { label: "Cantidad Diaria", name: "cantidadDiaria", type: "number", icon: "fa-chart-line" },
       { label: "Costo Producto", name: "costoProducto", type: "number", icon: "fa-dollar-sign" },
-      { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-industry" }
+      { label: "Tipo Producción Secundaria", name: "tipoProduccionSec", type: "text", icon: "fa-plus-circle" }
     ],
     "GESTION DE TERRENO": [
       { label: "Tipo", name: "tipo", type: "text", icon: "fa-map" },
@@ -51,11 +90,25 @@ const FinancieraPage = () => {
       { label: "Costo Construcciones", name: "costoConstrucciones", type: "number", icon: "fa-building" },
       { label: "Costo Arriendo", name: "costoArriendo", type: "number", icon: "fa-key" },
       { label: "Adicionales", name: "adicionales", type: "number", icon: "fa-plus-circle" }
-    ],
-    "TAREAS": [
-      { label: "Nombre", name: "nombre", type: "text", icon: "fa-tasks" },
-      { label: "Completado", name: "completado", type: "checkbox", icon: "fa-check-square" }
     ]
+  };
+
+  const calculateStats = () => {
+    const totalGastos = {
+      vacunas: data.vacunas.reduce((acc, curr) => acc + (curr.precio || 0), 0),
+      alimentacion: data.alimentacion.reduce((acc, curr) => acc + (curr.precio || 0), 0),
+      animales: data.animales.reduce((acc, curr) => acc + (curr.costoAnimal || 0), 0),
+      terrenos: data.terrenos.reduce((acc, curr) => acc + (curr.costoTerreno || 0), 0)
+    };
+
+    const totalIngresos = data.produccion.reduce((acc, curr) => acc + (curr.costoProducto || 0), 0);
+
+    return {
+      totalGastos: Object.values(totalGastos).reduce((a, b) => a + b, 0),
+      totalIngresos,
+      balance: totalIngresos - Object.values(totalGastos).reduce((a, b) => a + b, 0),
+      desglose: totalGastos
+    };
   };
 
   const cards = [
@@ -63,86 +116,173 @@ const FinancieraPage = () => {
       title: "VACUNAS ANIMALES",
       icon: "💉",
       description: "Gestiona los registros de vacunación",
-      stats: { total: "150", pending: "12" },
+      stats: {
+        total: data.vacunas.reduce((acc, curr) => acc + (curr.precio || 0), 0),
+        count: data.vacunas.length
+      },
       link: "/vacunas"
     },
     {
       title: "GESTION ALIMENTACION",
       icon: "🌾",
       description: "Control de gastos en alimentación",
-      stats: { total: "$2,500", month: "+15%" },
+      stats: {
+        total: data.alimentacion.reduce((acc, curr) => acc + (curr.precio || 0), 0),
+        count: data.alimentacion.length
+      },
       link: "/alimento"
     },
     {
       title: "GESTION ANIMAL",
       icon: "🐄",
       description: "Seguimiento de costos por animal",
-      stats: { total: "$5,200", month: "-8%" },
+      stats: {
+        total: data.animales.reduce((acc, curr) => acc + (curr.costoAnimal || 0), 0),
+        count: data.animales.length
+      },
       link: "/animales"
     },
     {
       title: "PRODUCCION ANIMAL",
       icon: "📊",
       description: "Métricas de producción",
-      stats: { total: "1,200L", month: "+22%" },
+      stats: {
+        total: data.produccion.reduce((acc, curr) => acc + (curr.costoProducto || 0), 0),
+        count: data.produccion.length
+      },
       link: "/produccion"
     },
     {
       title: "GESTION DE TERRENO",
       icon: "🌱",
       description: "Gestión de costos de terreno",
-      stats: { total: "$12,000", year: "+5%" },
+      stats: {
+        total: data.terrenos.reduce((acc, curr) => acc + (curr.costoTerreno || 0), 0),
+        count: data.terrenos.length
+      },
       link: "/terrenos"
     }
   ];
 
   const handleSubmit = async (formData) => {
     try {
-      let apiUrl = '';
-      switch (activeForm) {
-        case 'VACUNAS ANIMALES':
-          apiUrl = 'http://localhost:8080/vacunas';
-          break;
-        case 'GESTION ALIMENTACION':
-          apiUrl = 'http://localhost:8080/alimentacion';
-          break;
-        case 'GESTION ANIMAL':
-          apiUrl = 'http://localhost:8080/animales';
-          break;
-        case 'PRODUCCION ANIMAL':
-          apiUrl = 'http://localhost:8080/produccion';
-          break;
-        case 'GESTION DE TERRENO':
-          apiUrl = 'http://localhost:8080/terrenos';
-          break;
-      }
+      const endpoints = {
+        'VACUNAS ANIMALES': 'vacunas',
+        'GESTION ALIMENTACION': 'alimentos',
+        'GESTION ANIMAL': 'animales',
+        'PRODUCCION ANIMAL': 'produccion-animal',
+        'GESTION DE TERRENO': 'terrenos'
+      };
 
-      const response = await axios.post(apiUrl, formData);
-      console.log('Data saved successfully:', response.data);
+      const endpoint = endpoints[activeForm];
+      if (!endpoint) return;
+
+      await axios.post(`http://localhost:8080/${endpoint}`, formData);
+      await fetchAllData();
       setActiveForm(null);
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error('Error al guardar:', error);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#96BE54]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
+  const stats = calculateStats();
 
   return (
-    <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white">
+    <div className="p-8 bg-gradient-to-br from-[#F9FFEF] to-white min-h-screen">
       <div className="mb-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-between items-center"
         >
+          <div>
+            <h1 className="text-3xl font-bold text-[#47624F]">Gestión Financiera</h1>
+            <p className="text-gray-600">Control y seguimiento de gastos e ingresos</p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-3 gap-6 mt-8">
-          <div className="bg-white p-6 rounded-xl shadow-md">
-            <HiOutlineCash className="text-3xl text-[#96BE54] mb-2" />
-            <h3 className="text-sm text-gray-500">Total Gastos</h3>
-            <p className="text-2xl font-bold text-[#47624F]">$24,500</p>
-            <span className="text-xs text-green-500">+12% vs mes anterior</span>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                <HiOutlineCash className="text-2xl text-[#96BE54]" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Gastos</p>
+                <p className="text-2xl font-bold text-[#47624F]">₡{stats.totalGastos.toLocaleString()}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                <HiCurrencyDollar className="text-2xl text-[#96BE54]" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Total Ingresos</p>
+                <p className="text-2xl font-bold text-[#47624F]">₡{stats.totalIngresos.toLocaleString()}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                <HiChartBar className="text-2xl text-[#96BE54]" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Balance</p>
+                <p className={`text-2xl font-bold ${stats.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  ₡{stats.balance.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="bg-white p-6 rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[#96BE54]/10 rounded-lg">
+                <HiCalendar className="text-2xl text-[#96BE54]" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Registros Totales</p>
+                <p className="text-2xl font-bold text-[#47624F]">
+                  {Object.values(data).reduce((acc, curr) => acc + curr.length, 0)}
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -167,7 +307,8 @@ const FinancieraPage = () => {
                 </div>
                 <div className="text-right">
                   <span className="text-sm text-gray-500">Total</span>
-                  <p className="text-lg font-bold text-[#47624F]">{card.stats.total}</p>
+                  <p className="text-lg font-bold text-[#47624F]">₡{card.stats.total.toLocaleString()}</p>
+                  <span className="text-xs text-gray-400">{card.stats.count} registros</span>
                 </div>
               </div>
 
@@ -183,13 +324,14 @@ const FinancieraPage = () => {
                   href={card.link}
                   className="text-center bg-[#E6E9D9] text-[#3F523B] hover:bg-[#d6d9c9] px-6 py-2 rounded-lg transition-all hover:scale-105 flex items-center justify-center"
                 >
-                  Ver Registro
+                  Ver Registros
                 </a>
                 <button
                   onClick={() => setActiveForm(card.title)}
-                  className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-6 py-2 rounded-lg transition-all hover:scale-105"
+                  className="bg-[#96BE54] text-white hover:bg-[#769F4A] px-6 py-2 rounded-lg transition-all hover:scale-105 flex items-center justify-center gap-2"
                 >
-                  Agregar Registro
+                  <HiPlus className="text-xl" />
+                  Nuevo Registro
                 </button>
               </div>
             </div>
@@ -199,9 +341,10 @@ const FinancieraPage = () => {
 
       {activeForm && (
         <FormsDinamicos
-          fields={forms[activeForm] || []}
+          fields={forms[activeForm]}
           onSubmit={handleSubmit}
           onClose={() => setActiveForm(null)}
+          title={`Nuevo Registro - ${activeForm}`}
           action="create"
           selectedItem={null}
         />

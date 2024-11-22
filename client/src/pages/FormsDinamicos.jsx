@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
-const FormsDinamicos = ({ fields, onSubmit, onClose, action, selectedItem }) => {
+const FormsDinamicos = ({ fields, onSubmit, onClose, action, selectedItem, title }) => {
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
@@ -9,15 +9,33 @@ const FormsDinamicos = ({ fields, onSubmit, onClose, action, selectedItem }) => 
         };
     }, []);
 
+    const getFormTitle = () => {
+        const actionText = action === 'create' ? 'Nuevo' : 'Editar';
+        const formType = title.split(' - ')[1] || 'Registro';
+        return `${actionText} ${formType}`;
+    };
+
+    const getButtonText = () => {
+        const actionText = action === 'create' ? 'Crear' : 'Actualizar';
+        const formType = title.split(' - ')[1] || 'Registro';
+        return `${actionText} ${formType}`;
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        
+
+        for (const field of fields) {
+            if (field.type === 'number' && data[field.name]) {
+                data[field.name] = Number(data[field.name]);
+            }
+        }
+
         if (selectedItem) {
             data.id = selectedItem.id;
         }
-        
+
         onSubmit(data);
     };
 
@@ -52,9 +70,9 @@ const FormsDinamicos = ({ fields, onSubmit, onClose, action, selectedItem }) => 
                                     <i className={`fas ${action === 'create' ? 'fa-plus-circle' : 'fa-edit'} text-3xl text-[#96BE54]`} />
                                 </div>
                                 <h2 className="text-3xl font-bold bg-gradient-to-r from-[#96BE54] to-green-600 bg-clip-text text-transparent">
-                                    {action === 'create' ? 'Nueva Vacuna' : 'Editar Vacuna'}
+                                    {getFormTitle()}
                                 </h2>
-                                <p className="text-gray-600 mt-2">Complete los datos de la vacuna</p>
+                                <p className="text-gray-600 mt-2">Complete los datos del registro</p>
                             </div>
                         </div>
 
@@ -91,7 +109,7 @@ const FormsDinamicos = ({ fields, onSubmit, onClose, action, selectedItem }) => 
                                         type="submit"
                                         className="flex-1 bg-gradient-to-r from-[#96BE54] to-green-600 text-white py-3.5 rounded-xl font-medium transition-all duration-300 shadow-lg shadow-[#96BE54]/20 hover:shadow-xl hover:shadow-[#96BE54]/30"
                                     >
-                                        {action === 'create' ? 'Crear Vacuna' : 'Actualizar Vacuna'}
+                                        {getButtonText()}
                                     </motion.button>
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
