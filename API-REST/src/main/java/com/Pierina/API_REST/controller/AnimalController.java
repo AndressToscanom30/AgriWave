@@ -16,21 +16,18 @@ public class AnimalController {
     private AnimalRepository animalRepository;
 
     @GetMapping("")
-    List<Animal> index(){
-
+    public List<Animal> index() {
         return animalRepository.findAll();
-
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    Animal create(@RequestBody Animal animal){
+    public Animal create(@RequestBody Animal animal) {
         return animalRepository.save(animal);
     }
 
     @PutMapping("{id}")
-    Animal update(@PathVariable String id, @RequestBody Animal animal){
-
+    public Animal update(@PathVariable String id, @RequestBody Animal animal) {
         Animal animalFromDB = animalRepository
             .findById(id)
             .orElseThrow(RuntimeException::new);
@@ -46,19 +43,15 @@ public class AnimalController {
         animalFromDB.setAdicional(animal.getAdicional());
 
         return animalRepository.save(animalFromDB);
-
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    void delete(@PathVariable String id){
-
+    public void delete(@PathVariable String id) {
         Animal animal = animalRepository
             .findById(id)
             .orElseThrow(RuntimeException::new);
 
         animalRepository.delete(animal);
-
     }
-
 }

@@ -1,7 +1,6 @@
 package com.Pierina.API_REST.model;
 
-import java.sql.Date;
-
+import java.time.LocalDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
@@ -14,11 +13,11 @@ public class Animal {
     private String id;
     private String nombre;
     private String raza;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private float peso;
     private String origen;
     private float costoAnimal;
-    private Date fechaCompra;
+    private LocalDate fechaCompra;
     private boolean documentado;
     private float adicional;
 
